@@ -18,7 +18,7 @@ class Venta extends Model
     // Relación con Cliente
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'fk_id_cliente');
+        return $this->belongsTo(Cliente::class, 'fk_id_cliente',"id");
     }
 
     // Relación con DetalleServicioVenta

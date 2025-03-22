@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use App\Models\Servicio;
 use App\Models\Accesorio;
+use App\Models\Cliente;
 use App\Models\Venta;
 Use DateTime;
 
@@ -30,7 +31,7 @@ class CatalogosController extends Controller
     public function servicioscreate(): View
 {
     $servicios = Servicio::all();
-    return view('catalogos.servicios', [
+    return view('catalogos.servicioscreate', [
         'servicios' => $servicios,
         "breadcrumbs" => [
             "inicio" => url("/"),
@@ -54,7 +55,7 @@ class CatalogosController extends Controller
     public function accesorioscreate(): View
     {
         $accesorios = Accesorio::all();
-        return view('catalogos.accesorios', [
+        return view('catalogos.accesorioscreate', [
             'accesorios' => $accesorios,
             "breadcrumbs" => [
                 "inicio" => url("/"),
@@ -76,17 +77,16 @@ class CatalogosController extends Controller
         ]);
     }
     public function ventascreate(): View
-    {
-        $ventas = Venta::all();
-        return view('catalogos.ventas', [
-            'ventas' => $ventas,
-            "breadcrumbs" => [
-                "inicio" => url("/"),
-                "ventas" => url("/catalogos/ventas"),
-                "agregar" => url("/catalogos/ventas/create")
-            ]
-        ]);
-    }
+{
+    $clientes = Cliente::all(); // Obtener todos los clientes de la base de datos
+    return view('catalogos.ventascreate', compact('clientes'), [ // Usar compact() para pasar $clientes
+        "breadcrumbs" => [
+            "inicio" => url("/"),
+            "ventas" => url("/catalogos/ventas"),
+            "agregar" => url("/catalogos/ventas/create")
+        ]
+    ]);
+}
 
 
 }

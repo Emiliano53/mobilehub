@@ -1,160 +1,27 @@
-/* Reset de márgenes y paddings */
-* {
-    margin: 0;
-    padding: 0;
+.sidebar {
+    background-color: rgb(7, 15, 254);
+    color: white;
+    padding: 20px;
+    height: 100vh; /* Establece la altura al 100% de la ventana */
+    box-sizing: border-box; /* Asegura que el padding no afecte la altura total */
+}
+
+.sidebar-logo img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.sidebar a.nav-link {
+    color: white;
+}
+
+.sidebar a.nav-link:hover {
+    background-color: rgb(70, 72, 182);
+}
+
+.col-10 {
+    height: 100vh;
+    overflow-y: auto; /* Agrega scroll si el contenido principal excede la altura */
     box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
-
-/* Contenedor principal */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Estilo para los títulos */
-h1 {
-    font-size: 2.5rem;
-    color: #343a40;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* Estilo para las tablas */
-table {
-    width: 100%;
-    margin-bottom: 20px;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #dee2e6;
-}
-
-th {
-    background-color: #343a40;
-    color: #fff;
-    font-size: 1rem;
-}
-
-td {
-    font-size: 0.9rem;
-}
-
-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Estilo para los formularios */
-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-form .form-group {
-    margin-bottom: 15px;
-}
-
-form label {
-    font-size: 1rem;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-}
-
-form input, form select {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-}
-
-form input:focus, form select:focus {
-    border-color: #80bdff;
-    outline: none;
-}
-
-form button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #0056b3;
-    color: #fff;
-}
-
-/* Estilo para los botones de acción */
-.btn {
-    padding: 8px 16px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn-warning {
-    background-color: #ffc107;
-    color: #fff;
-}
-
-.btn-warning:hover {
-    background-color: #e0a800;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-/* Estilo para las alertas */
-.alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-}
-
-.alert-success {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.alert-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.alert-info {
-    background-color: #17a2b8;
-    color: #fff;
 }
