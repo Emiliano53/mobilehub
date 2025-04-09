@@ -29,17 +29,17 @@ class CatalogosController extends Controller
         
     }
     public function servicioscreate(): View
-{
-    $servicios = Servicio::all();
-    return view('catalogos.servicioscreate', [
-        'servicios' => $servicios,
-        "breadcrumbs" => [
-            "inicio" => url("/"),
-            "servicios" => url("/catalogos/servicios"), 
-            "agregar" => url("/catalogos/servicios/create")
-        ]
-    ]);
-}
+    {
+        $servicios = Servicio::all();
+        return view('catalogos.servicioscreate', [
+            'servicios' => $servicios,
+            "breadcrumbs" => [
+                "inicio" => url("/"),
+                "servicios" => url("/catalogos/servicios"), 
+                "agregar" => url("/catalogos/servicios/create")
+            ]
+        ]);
+    }
 
     public function accesorios(): View
     {
@@ -52,6 +52,7 @@ class CatalogosController extends Controller
             ]
         ]);
     }
+
     public function accesorioscreate(): View
     {
         $accesorios = Accesorio::all();
@@ -76,17 +77,18 @@ class CatalogosController extends Controller
             ]
         ]);
     }
+
     public function ventascreate(): View
-{
-    $clientes = Cliente::all(); // Obtener todos los clientes de la base de datos
-    return view('catalogos.ventascreate', compact('clientes'), [ // Usar compact() para pasar $clientes
-        "breadcrumbs" => [
-            "inicio" => url("/"),
-            "ventas" => url("/catalogos/ventas"),
-            "agregar" => url("/catalogos/ventas/create")
-        ]
-    ]);
-}
+    {
+        $clientes = Cliente::all(); // Obtener todos los clientes de la base de datos
+        return view('catalogos.ventascreate', compact('clientes'), [ // Usar compact() para pasar $clientes
+            "breadcrumbs" => [
+                "inicio" => url("/"),
+                "ventas" => url("/catalogos/ventas"),
+                "agregar" => url("/catalogos/ventas/create")
+            ]
+        ]);
+    }
 
 
 }
