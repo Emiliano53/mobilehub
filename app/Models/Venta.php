@@ -32,4 +32,17 @@ class Venta extends Model
     {
         return $this->hasMany(Detalle_Venta_Accesorio::class, 'fk_id_venta');
     }
+
+    // Relación con Accesorios a través de DetalleVentaAccesorio
+    public function accesorios()
+    {
+        return $this->hasManyThrough(
+            Accesorio::class,               // Modelo final al que queremos acceder
+            Detalle_Venta_Accesorio::class, // Modelo intermedio
+            'fk_id_venta',                 // Clave foránea en DetalleVentaAccesorio que referencia a Venta
+            'fk_id_accesorio',             // Clave foránea en DetalleVentaAccesorio que referencia a Accesorio
+            'id_venta',                    // Clave local en el modelo Venta
+            'id_accesorio'                 // Clave local en el modelo Accesorio
+        );
+    }
 }

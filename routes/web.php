@@ -2,21 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CatalogosController;
+use App\Http\Controllers\ReportesController; 
 
 Route::get('/', function () {
     return view('home',["breadcrumbs"=>[]]);
 });
-//Servicios 
+
+// Servicios
 Route::get('/catalogos/servicios', [CatalogosController::class, 'servicios'])->name('catalogos.servicios');
 Route::get('/catalogos/servicios/create', [CatalogosController::class, 'servicioscreate'])->name('catalogos.servicios.create');
 Route::get('/catalogos/servicios/{id}/edit', [CatalogosController::class, 'edit'])->name('catalogos.servicios.edit');
 Route::put('/catalogos/servicios/{id}', [CatalogosController::class, 'update'])->name('catalogos.servicios.update');
 Route::post('/catalogos/servicios/store', [CatalogosController::class, 'store'])->name('catalogos.servicios.store');
 Route::delete('/catalogos/servicios/{id}', [CatalogosController::class, 'destroy'])->name('catalogos.servicios.destroy');
-//Accesorios 
+
+// Accesorios
 Route::get('/catalogos/accesorios', [CatalogosController::class, 'accesorios'])->name('catalogos.accesorios');
 Route::get('/catalogos/accesorios/create', [CatalogosController::class, 'accesorioscreate'])->name('catalogos.accesorios.create');
 Route::get('/catalogos/accesorios/{id}/edit', [CatalogosController::class, 'editAccesorio'])->name('catalogos.accesorios.edit');
-//Ventas
+
+// Ventas
 Route::get('/catalogos/ventas', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
 Route::get('/catalogos/ventas/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
+
+// Reportes
+Route::get('/reportes', [ReportesController::class, 'reportesGet'])->name('reportes');
+Route::get('/reportes/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas');
+Route::get('/reportes/servicios', [ReportesController::class, 'reporteServiciosGet'])->name('reportes.servicios');
+Route::get('/reportes/inventario', [ReportesController::class, 'reporteInventarioGet'])->name('reportes.inventario');
