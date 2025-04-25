@@ -13,18 +13,20 @@
             <thead>
                 <tr>
                     <th>ID Servicio</th>
-                    <th>Nombre Servicio</th>
-                    <th>Descripción</th>
-                    {{-- Agrega más columnas según la estructura de tu tabla 'servicios' --}}
+                    <th>Descripción Servicio</th>
+                    <th>Costo</th>
+                    <th>Estado</th>
+                    {{-- Agrega más columnas según la estructura de tu tabla 'servicio' --}}
                 </tr>
             </thead>
             <tbody>
                 @foreach ($servicios as $servicio)
                     <tr>
-                        <td>{{ $servicio->id_servicio }}</td>
-                        <td>{{ $servicio->nombre }}</td>
-                        <td>{{ $servicio->descripcion }}</td>
-                        {{-- Muestra más datos del servicio --}}
+                        <td>{{ $servicio->id }}</td>
+                        <td>{{ $servicio->descripcion_servicio }}</td>
+                        <td>{{ $servicio->costo }}</td>
+                        <td>{{ $servicio->estado }}</td>
+                        {{-- Muestra más datos del servicio si los tienes --}}
                     </tr>
                 @endforeach
             </tbody>

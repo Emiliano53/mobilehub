@@ -19,7 +19,14 @@ class ReportesController extends Controller
         ]);
     }
 
-    public function reporteVentasGet(): View
+/*************  ✨ Windsurf Command ⭐  *************/
+    /**
+     * Devuelve una vista que muestra un reporte de ventas, con las ventas
+     * ordenadas por fecha descendiente, y cada venta con sus accesorios.
+     *
+     * @return View
+     */
+/*******  3a9ef487-5c6e-4bf1-905e-207e0602da6a  *******/    public function reporteVentasGet(): View
     {
         $ventas = Venta::with('accesorios')->orderBy('fecha', 'DESC')->get();
         return view('reportes.ventas', [
@@ -34,7 +41,7 @@ class ReportesController extends Controller
 
     public function reporteServiciosGet(): View
     {
-        $servicios = Servicio::latest()->get();
+        $servicios = Servicio::orderBy('id', 'DESC')->get(); // Ordenar por ID descendente (el más reciente primero)
         return view('reportes.servicios', [
             'servicios' => $servicios,
             'breadcrumbs' => [
@@ -57,5 +64,4 @@ class ReportesController extends Controller
             ],
         ]);
     }
-
 }
