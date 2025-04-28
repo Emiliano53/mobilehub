@@ -30,7 +30,7 @@ class CatalogosController extends Controller
 
     public function servicioscreate(): View
     {
-        return view('catalogos.servicios.create', [
+        return view('catalogos.servicios_create', [
             "breadcrumbs" => [
                 "inicio" => url("/"),
                 "servicios" => url("/catalogos/servicios"), 
@@ -59,7 +59,7 @@ class CatalogosController extends Controller
     public function edit($id)
     {
         $servicio = Servicio::findOrFail($id);
-        return view('catalogos.servicios.edit', [
+        return view('catalogos.servicios_edit', [
             'servicio' => $servicio,
             "breadcrumbs" => [
                 "inicio" => url("/"),
@@ -107,7 +107,7 @@ class CatalogosController extends Controller
 
     public function accesorioscreate(): View
     {
-        return view('catalogos.accesorios.create', [
+        return view('catalogos.accesorios_create', [
             "breadcrumbs" => [
                 "inicio" => url("/"),
                 "accesorios" => url("/catalogos/accesorios"),
@@ -119,15 +119,19 @@ class CatalogosController extends Controller
     public function storeAccesorio(Request $request)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100',
+            'tipo' => 'required|string|max:50',
+            'marca' => 'required|string|max:50',
             'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'existencia' => 'required|integer|min:0',
         ]);
 
         $accesorio = new Accesorio();
-        $accesorio->descripcion = $request->input('descripcion');
+        $accesorio->nombre = $request->input('nombre');
+        $accesorio->tipo = $request->input('tipo');
+        $accesorio->marca = $request->input('marca');
         $accesorio->precio = $request->input('precio');
-        $accesorio->stock = $request->input('stock');
+        $accesorio->existencia = $request->input('existencia');
         $accesorio->save();
 
         return redirect('/catalogos/accesorios')->with('success', 'Accesorio guardado exitosamente!');
@@ -136,7 +140,7 @@ class CatalogosController extends Controller
     public function editAccesorio($id)
     {
         $accesorio = Accesorio::findOrFail($id);
-        return view('catalogos.accesorios.edit', [
+        return view('catalogos.accesorios_edit', [
             'accesorio' => $accesorio,
             "breadcrumbs" => [
                 "inicio" => url("/"),
@@ -149,15 +153,19 @@ class CatalogosController extends Controller
     public function updateAccesorio(Request $request, $id)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100',
+            'tipo' => 'required|string|max:50',
+            'marca' => 'required|string|max:50',
             'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'existencia' => 'required|integer|min:0',
         ]);
 
         $accesorio = Accesorio::findOrFail($id);
-        $accesorio->descripcion = $request->input('descripcion');
+        $accesorio->nombre = $request->input('nombre');
+        $accesorio->tipo = $request->input('tipo');
+        $accesorio->marca = $request->input('marca');
         $accesorio->precio = $request->input('precio');
-        $accesorio->stock = $request->input('stock');
+        $accesorio->existencia = $request->input('existencia');
         $accesorio->save();
 
         return redirect('/catalogos/accesorios')->with('success', 'Accesorio actualizado exitosamente!');
@@ -185,7 +193,7 @@ class CatalogosController extends Controller
     public function ventascreate(): View
     {
         $clientes = Cliente::all();
-        return view('catalogos.ventas.create', [
+        return view('catalogos.ventas_create', [
             'clientes' => $clientes,
             "breadcrumbs" => [
                 "inicio" => url("/"),
@@ -216,7 +224,7 @@ class CatalogosController extends Controller
     {
         $venta = Venta::with('cliente')->findOrFail($id);
         $clientes = Cliente::all();
-        return view('catalogos.ventas.edit', [
+        return view('catalogos.ventas_edit', [
             'venta' => $venta,
             'clientes' => $clientes,
             "breadcrumbs" => [

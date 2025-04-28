@@ -1,41 +1,46 @@
-@extends("components.layout")
-@component("components.breadcrumbs",["breadcrumbs"=>$breadcrumbs])
-@endcomponent
+@extends('components.layout')
+
 @section('content')
-    <div class="container">
-        <h1>Lista de Ventas</h1>
-        <div class="col-auto titlebar-commands">
-            <a class="btn btn-primary" href="{{url('/catalogos/ventas/create')}}">Agregar</a>
+<div class="container">
+    <div class="window">
+        <div class="title-bar">
+            MobileHub | Ventas
         </div>
-        
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Descripción</th>
-                    <th>Fecha</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($ventas as $venta)
+        <div class="content">
+            <h1>LISTA DE VENTAS</h1>
+            <div class="button-group mb-3">
+                <a href="{{ url('/catalogos/ventas/create') }}" class="btn btn-primary">Crear Venta</a>
+            </div>
+            <table class="table">
+                <thead>
                     <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($ventas as $venta)
+                    <tr>
+                        <td>{{ $venta->id }}</td>
                         <td>{{ $venta->cliente->nombre }}</td>
-                        <td>{{ $venta->descripcion }}</td>
                         <td>{{ $venta->fecha }}</td>
-                        <td>${{ number_format($venta->total, 2) }}</td>
+                        <td>{{ $venta->total }}</td>
                         <td>
-                            <a href="{{ url('/catalogos/ventas.edit', $venta->id_venta) }}" class="btn btn-warning btn-sm">Editar</a>
-                            <form action="{{ url('/catalogos/ventas.destroy', $venta->id_venta) }}" method="POST" style="display:inline;">
+                            <a href="{{ url('/catalogos/ventas/edit', $venta->id) }}" class="btn btn-sm btn-warning">Editar</a>
+                            <form action="{{ url('/catalogos/ventas/destroy', $venta->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
                             </form>
                         </td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 @endsection

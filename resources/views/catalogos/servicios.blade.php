@@ -5,7 +5,7 @@
     <div class="container">
         <h1>Lista de Servicios</h1>
         <div class="col-auto titlebar-commands">
-            <a class="btn btn-primary" href="{{url('/catalogos/servicios/create')}}">Agregar</a>
+            <a class="btn btn-primary" href="{{ route('catalogos.servicios.create') }}">Agregar</a>
         </div>
         
         <table class="table table-striped">

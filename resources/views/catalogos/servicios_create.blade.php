@@ -9,7 +9,7 @@
         <div class="content">
             <h1>REGISTRAR SERVICIO</h1>
 
-            <form action="{{ url('/catalogos/servicios/store') }}" method="POST">
+            <form action="{{ route('catalogos.servicios.store') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
@@ -27,8 +27,8 @@
                     <input type="number" name="precio" id="precio" class="form-control">
                 </div>
 
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                <div class="form-group">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>

@@ -9,7 +9,7 @@
         <div class="content">
             <h1>REGISTRAR VENTA</h1>
 
-            <form action="{{ url('ventas/store') }}" method="POST">
+            <form action="{{ url('/catalogos/ventas/store') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
@@ -36,8 +36,8 @@
                     <input type="number" name="total" id="total" class="form-control" required>
                 </div>
 
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                <div class="form-group">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>

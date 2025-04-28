@@ -9,7 +9,7 @@
         <div class="content">
             <h1>REGISTRAR ACCESORIO</h1>
 
-            <form action="{{ url('accesorios/store') }}" method="POST">
+            <form action="{{ route('catalogos.accesorios.store') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
@@ -37,8 +37,8 @@
                     <input type="text" name="marca" id="marca" class="form-control" required>
                 </div>
 
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                <div class="form-group">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>

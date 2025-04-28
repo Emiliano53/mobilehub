@@ -9,7 +9,7 @@
         <div class="content">
             <h1>EDITAR SERVICIO</h1>
 
-            <form action="{{ url('catalogos/servicios/update', $servicio->id) }}" method="POST">
+            <form action="{{ url('/catalogos/servicios/update', $servicio->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -28,8 +28,8 @@
                     <input type="number" name="costo" id="costo" class="form-control" value="{{ $servicio->costo }}" required>
                 </div>
 
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                <div class="form-group">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Actualizar</button>
                 </div>
             </form>
