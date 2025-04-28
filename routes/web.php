@@ -8,6 +8,7 @@ Route::get('/', function () {
     return view('home',["breadcrumbs"=>[]]);
 });
 
+
 // Servicios
 Route::get('/catalogos/servicios', [CatalogosController::class, 'servicios'])->name('catalogos.servicios');
 Route::get('/catalogos/servicios/create', [CatalogosController::class, 'servicioscreate'])->name('catalogos.servicios.create');
@@ -15,6 +16,7 @@ Route::get('/catalogos/servicios/{id}/edit', [CatalogosController::class, 'edit'
 Route::put('/catalogos/servicios/{id}', [CatalogosController::class, 'update'])->name('catalogos.servicios.update');
 Route::post('/catalogos/servicios/store', [CatalogosController::class, 'store'])->name('catalogos.servicios.store');
 Route::delete('/catalogos/servicios/{id}', [CatalogosController::class, 'destroy'])->name('catalogos.servicios.destroy');
+
 
 // Accesorios
 Route::get('/catalogos/accesorios', [CatalogosController::class, 'accesorios'])->name('catalogos.accesorios');
@@ -24,13 +26,16 @@ Route::post('/catalogos/accesorios/store', [CatalogosController::class, 'storeAc
 Route::put('/catalogos/accesorios/{id}', [CatalogosController::class, 'updateAccesorio'])->name('catalogos.accesorios.update');
 Route::delete('/catalogos/accesorios/{id}', [CatalogosController::class, 'destroyAccesorio'])->name('catalogos.accesorios.destroy');
 
+
 // Ventas
 Route::get('/catalogos/ventas', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
 Route::get('/catalogos/ventas/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
 Route::post('/catalogos/ventas/store', [CatalogosController::class, 'storeVenta'])->name('catalogos.ventas.store');
 Route::get('/catalogos/ventas/{id}/edit', [CatalogosController::class, 'editVenta'])->name('catalogos.ventas.edit');
 Route::put('/catalogos/ventas/{id}', [CatalogosController::class, 'updateVenta'])->name('catalogos.ventas.update');
-Route::delete('/catalogos/ventas/{id}', [CatalogosController::class, 'destroyVenta'])->name('catalogos.ventas.delete');
+Route::delete('/catalogos/ventas/{id}', [CatalogosController::class, 'destroyVenta'])->name('catalogos.ventas.destroy');
+
+
 
 // Reportes
 Route::get('/reportes', [ReportesController::class, 'reportesGet'])->name('reportes');
