@@ -8,7 +8,8 @@
         <div class="content">
             <h1>LISTA DE VENTAS</h1>
             <div class="button-group mb-3">
-                <a href="{{ url('/catalogos/ventas/create') }}" class="btn btn-primary">Crear Venta</a>
+                <a href="{{ url('/catalogos/ventas/create') }}" class="btn btn-primary">Venta Nuevo Cliente</a>
+                <a href="{{ url('/catalogos/ventas/create-existing') }}" class="btn btn-primary">Venta Cliente Registrado</a>
             </div>
             <table class="table">
                 <thead>

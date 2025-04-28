@@ -30,6 +30,7 @@ Route::delete('/catalogos/accesorios/{id}', [CatalogosController::class, 'destro
 // Ventas
 Route::get('/catalogos/ventas', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
 Route::get('/catalogos/ventas/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
+Route::get('/catalogos/ventas/create-existing', [CatalogosController::class, 'ventasCreateExisting'])->name('catalogos.ventas.create-existing');
 Route::post('/catalogos/ventas/store', [CatalogosController::class, 'storeVenta'])->name('catalogos.ventas.store');
 Route::get('/catalogos/ventas/{id}/edit', [CatalogosController::class, 'editVenta'])->name('catalogos.ventas.edit');
 Route::put('/catalogos/ventas/{id}', [CatalogosController::class, 'updateVenta'])->name('catalogos.ventas.update');

@@ -22,6 +22,17 @@ class Venta extends Model
         return $this->belongsTo(Cliente::class, 'fk_id_cliente', 'id_cliente'); // Clave foránea y primaria correctas
     }
 
+    // Relación con Servicios (tabla pivote)
+    public function servicios()
+    {
+        return $this->belongsToMany(
+            Servicio::class,
+            'detalle_servicio_venta', // Tabla pivote
+            'fk_id_venta', // Clave foránea en la tabla pivote que apunta a Venta
+            'fk_id_servicio' // Clave foránea en la tabla pivote que apunta a Servicio
+        );
+    }
+
     // Relación con Accesorios (tabla pivote)
     public function accesorios()
     {

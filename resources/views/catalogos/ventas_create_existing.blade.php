@@ -4,26 +4,20 @@
     @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
     @endcomponent
 
-    <h1 class="text-center">Registrar Venta</h1>
+    <h1 class="text-center">Registrar Venta - Cliente Existente</h1>
 
     <form action="{{ route('catalogos.ventas.store') }}" method="POST" class="mt-4">
         @csrf
 
-        <!-- Formulario para nuevo cliente -->
-        <div id="form-nuevo-cliente" class="mt-3">
-            <h4>Registrar Nuevo Cliente</h4>
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre del cliente" required>
-            </div>
-            <div class="form-group">
-                <label for="direccion">Dirección</label>
-                <input type="text" name="direccion" id="direccion" class="form-control" placeholder="Dirección del cliente" required>
-            </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono</label>
-                <input type="text" name="telefono" id="telefono" class="form-control" placeholder="Teléfono del cliente" required>
-            </div>
+        <!-- Selección de cliente existente -->
+        <div class="form-group">
+            <label for="cliente_id">Seleccionar Cliente</label>
+            <select name="cliente_id" id="cliente_id" class="form-control" required>
+                <option value="">Seleccione un cliente</option>
+                @foreach ($clientes as $cliente)
+                    <option value="{{ $cliente->id_cliente }}">{{ $cliente->nombre }} - {{ $cliente->telefono }}</option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Selección de servicios -->

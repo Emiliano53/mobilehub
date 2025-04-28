@@ -194,9 +194,14 @@ class CatalogosController extends Controller
 
     public function ventascreate(): View
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::all(); // Carga todos los clientes
+        $servicios = Servicio::all(); // Carga todos los servicios
+        $productos = Accesorio::all(); // Carga todos los productos (accesorios)
+
         return view('catalogos.ventas_create', [
             'clientes' => $clientes,
+            'servicios' => $servicios,
+            'productos' => $productos,
             'breadcrumbs' => [
                 'Inicio' => url('/'),
                 'Ventas' => url('/catalogos/ventas'),
@@ -205,21 +210,65 @@ class CatalogosController extends Controller
         ]);
     }
 
+    public function ventasCreateExisting()
+    {
+        $clientes = Cliente::all(); // Cargar todos los clientes registrados
+        $servicios = Servicio::all(); // Cargar todos los servicios disponibles
+        $productos = Accesorio::all(); // Cargar todos los productos disponibles
+
+        return view('catalogos.ventas_create_existing', [
+            'clientes' => $clientes,
+            'servicios' => $servicios,
+            'productos' => $productos,
+            'breadcrumbs' => [
+                'Inicio' => url('/'),
+                'Ventas' => url('/catalogos/ventas'),
+                'Registrar Venta - Cliente Existente' => url('/catalogos/ventas/create-existing'),
+            ],
+        ]);
+    }
+
     public function storeVenta(Request $request)
     {
         $request->validate([
-            'cliente_id' => 'required|exists:cliente,id_cliente', // Valida que el cliente exista
+            'cliente_opcion' => 'required|in:nuevo,existente',
+            'cliente_id' => 'nullable|exists:cliente,id_cliente',
+            'nombre' => 'nullable|required_if:cliente_opcion,nuevo|string|max:100',
+            'direccion' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:20',
             'fecha' => 'required|date',
             'total' => 'required|numeric|min:0',
         ]);
 
+        // Determinar cliente
+        if ($request->cliente_opcion === 'nuevo') {
+            $cliente = new Cliente();
+            $cliente->nombre = $request->input('nombre');
+            $cliente->direccion = $request->input('direccion');
+            $cliente->telefono = $request->input('telefono');
+            $cliente->save();
+
+            $cliente_id = $cliente->id_cliente;
+        } else {
+            $cliente_id = $request->input('cliente_id');
+        }
+
+        // Crear la venta
         $venta = new Venta();
-        $venta->fk_id_cliente = $request->input('cliente_id'); // Usa la clave foránea correcta
+        $venta->fk_id_cliente = $cliente_id;
         $venta->fecha = $request->input('fecha');
         $venta->total = $request->input('total');
-        $venta->descripcion = $request->input('descripcion', null); // Opcional
-        $venta->estado = 1; // Estado por defecto
+        $venta->descripcion = $request->input('descripcion', null);
+        $venta->estado = 1;
         $venta->save();
+
+        // Asociar servicios y productos
+        if ($request->filled('servicios')) {
+            $venta->servicios()->attach($request->input('servicios'));
+        }
+        if ($request->filled('productos')) {
+            $venta->accesorios()->attach($request->input('productos'));
+        }
 
         return redirect('/catalogos/ventas')->with('success', 'Venta registrada exitosamente!');
     }
