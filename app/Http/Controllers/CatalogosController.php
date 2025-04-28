@@ -180,7 +180,9 @@ class CatalogosController extends Controller
 
     public function ventas(): View
     {
-        $ventas = Venta::with('cliente')->get();
+        // Carga las relaciones cliente y accesorios
+        $ventas = Venta::with(['cliente', 'accesorios'])->get();
+
         return view('catalogos.ventas', [
             'ventas' => $ventas,
             "breadcrumbs" => [
@@ -206,15 +208,17 @@ class CatalogosController extends Controller
     public function storeVenta(Request $request)
     {
         $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
+            'cliente_id' => 'required|exists:cliente,id_cliente', // Valida que el cliente exista
             'fecha' => 'required|date',
             'total' => 'required|numeric|min:0',
         ]);
 
         $venta = new Venta();
-        $venta->cliente_id = $request->input('cliente_id');
+        $venta->fk_id_cliente = $request->input('cliente_id'); // Usa la clave foránea correcta
         $venta->fecha = $request->input('fecha');
         $venta->total = $request->input('total');
+        $venta->descripcion = $request->input('descripcion', null); // Opcional
+        $venta->estado = 1; // Estado por defecto
         $venta->save();
 
         return redirect('/catalogos/ventas')->with('success', 'Venta registrada exitosamente!');
@@ -238,12 +242,12 @@ class CatalogosController extends Controller
     public function updateVenta(Request $request, $id)
     {
         $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
+            'cliente_id' => 'required|exists:cliente,id_cliente', // Ajusta la validación a la clave primaria real
             'fecha' => 'required|date',
             'total' => 'required|numeric|min:0',
         ]);
 
-        $venta = Venta::with('cliente')->findOrFail($id);
+        $venta = Venta::findOrFail($id);
         $venta->cliente_id = $request->input('cliente_id');
         $venta->fecha = $request->input('fecha');
         $venta->total = $request->input('total');
@@ -254,7 +258,7 @@ class CatalogosController extends Controller
 
     public function destroyVenta($id)
     {
-        $venta = Venta::with('cliente')->findOrFail($id);
+        $venta = Venta::findOrFail($id);
         $venta->delete();
         return redirect('/catalogos/ventas')->with('success', 'Venta eliminada exitosamente!');
     }

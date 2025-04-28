@@ -4,39 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany; // Asegúrate de importar esta clase
 
 class Venta extends Model
 {
     use HasFactory;
-    protected $table = 'venta';
-    protected $primaryKey = 'id'; // Clave primaria de la tabla venta es 'id'
+
+    protected $table = 'venta'; // Nombre de la tabla
+    protected $primaryKey = 'id'; // Clave primaria
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = ['fk_id_cliente', 'descripcion', 'fecha', 'total'];
+    protected $fillable = ['fk_id_cliente', 'fecha', 'total', 'descripcion', 'estado'];
     public $timestamps = false;
 
     // Relación con Cliente
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'fk_id_cliente',"id");
+        return $this->belongsTo(Cliente::class, 'fk_id_cliente', 'id_cliente'); // Clave foránea y primaria correctas
     }
 
-    // Relación con DetalleServicioVenta
-    public function detallesServicio()
+    // Relación con Accesorios (tabla pivote)
+    public function accesorios()
     {
-        return $this->hasMany(Detalle_Servicio_Venta::class, 'fk_id_venta');
-    }
-
-    // Relación con DetalleVentaAccesorio
-    public function detallesAccesorio()
-    {
-        return $this->hasMany(Detalle_Venta_Accesorio::class, 'fk_id_venta');
-    }
-
-    // Relación con Accesorios a través de DetalleVentaAccesorio (Usando belongsToMany)
-    public function accesorios(): BelongsToMany
-    {
-        return $this->belongsToMany(Accesorio::class, 'detalle_venta_accesorio', 'fk_id_venta', 'fk_id_accesorio', 'id', 'id');
+        return $this->belongsToMany(
+            Accesorio::class,
+            'detalle_venta_accesorio', // Nombre de la tabla pivote
+            'fk_id_venta', // Clave foránea en la tabla pivote que apunta a Venta
+            'fk_id_accesorio' // Clave foránea en la tabla pivote que apunta a Accesorio
+        )->withPivot('cantidad', 'precio_unitario', 'subtotal'); // Incluye columnas adicionales de la tabla pivote
     }
 }
