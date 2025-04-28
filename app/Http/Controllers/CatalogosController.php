@@ -195,11 +195,11 @@ class CatalogosController extends Controller
         $clientes = Cliente::all();
         return view('catalogos.ventas_create', [
             'clientes' => $clientes,
-            "breadcrumbs" => [
-                "inicio" => url("/"),
-                "ventas" => url("/catalogos/ventas"),
-                "agregar" => url("/catalogos/ventas/create")
-            ]
+            'breadcrumbs' => [
+                'Inicio' => url('/'),
+                'Ventas' => url('/catalogos/ventas'),
+                'Registrar Venta' => url('/catalogos/ventas/create'),
+            ],
         ]);
     }
 

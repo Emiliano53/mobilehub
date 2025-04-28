@@ -1,7 +1,7 @@
 @extends("components.layout")
-@component("components.breadcrumbs",["breadcrumbs"=>$breadcrumbs])
-@endcomponent
 @section('content')
+@component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+@endcomponent
     <div class="container">
         <h1>Lista de Servicios</h1>
         <div class="col-auto titlebar-commands">

@@ -1,11 +1,10 @@
 @extends('components.layout') 
 
 @section('content')
+@component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+@endcomponent
 <div class="container">
     <div class="window">
-        <div class="title-bar">
-            MobileHub | Accesorios | Registro
-        </div>
         <div class="content">
             <h1>REGISTRAR ACCESORIO</h1>
 
