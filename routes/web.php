@@ -20,10 +20,17 @@ Route::delete('/catalogos/servicios/{id}', [CatalogosController::class, 'destroy
 Route::get('/catalogos/accesorios', [CatalogosController::class, 'accesorios'])->name('catalogos.accesorios');
 Route::get('/catalogos/accesorios/create', [CatalogosController::class, 'accesorioscreate'])->name('catalogos.accesorios.create');
 Route::get('/catalogos/accesorios/{id}/edit', [CatalogosController::class, 'editAccesorio'])->name('catalogos.accesorios.edit');
+Route::post('/catalogos/accesorios/store', [CatalogosController::class, 'storeAccesorio'])->name('catalogos.accesorios.store');
+Route::put('/catalogos/accesorios/{id}', [CatalogosController::class, 'updateAccesorio'])->name('catalogos.accesorios.update');
+Route::delete('/catalogos/accesorios/{id}', [CatalogosController::class, 'destroyAccesorio'])->name('catalogos.accesorios.destroy');
 
 // Ventas
 Route::get('/catalogos/ventas', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
 Route::get('/catalogos/ventas/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
+Route::post('/catalogos/ventas/store', [CatalogosController::class, 'storeVenta'])->name('catalogos.ventas.store');
+Route::get('/catalogos/ventas/{id}/edit', [CatalogosController::class, 'editVenta'])->name('catalogos.ventas.edit');
+Route::put('/catalogos/ventas/{id}', [CatalogosController::class, 'updateVenta'])->name('catalogos.ventas.update');
+Route::delete('/catalogos/ventas/{id}', [CatalogosController::class, 'destroyVenta'])->name('catalogos.ventas.delete');
 
 // Reportes
 Route::get('/reportes', [ReportesController::class, 'reportesGet'])->name('reportes');
