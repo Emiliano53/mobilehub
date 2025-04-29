@@ -1,46 +1,63 @@
-/* Estilos para el contenedor principal del header y menú */
-.header-menu-container {
-    background-color: #f8f9fa; /* Un fondo claro */
-    padding: 10px 20px;
+/* Estilos para el contenedor principal del header */
+.header-wrapper {
     display: flex;
-    flex-direction: column; /* Coloca el logo arriba y el menú abajo */
-    align-items: center; /* Centra horizontalmente el logo y el menú */
+    align-items: flex-start; /* Alinea los elementos en la parte superior */
 }
 
 /* Estilos para el contenedor del logo */
-.logo-container {
-    margin-bottom: 10px; /* Espacio entre el logo y el menú */
+.logo-container-left {
+    padding: 10px 15px;
+    margin-right: 10px;
+    width: fit-content; /* Ajusta el ancho al contenido del logo */
+    margin-top: 5px; /* Espacio desde la parte superior */
 }
 
-.logo-container img {
-    max-height: 50px; /* Ajusta el tamaño deseado para el logo pequeño */
+.logo-container-left img {
+    max-height: 200px; /* Tamaño del logo */
+    width: auto; /* Mantener proporción */
 }
 
 /* Estilos para la barra azul del menú */
-.menu-bar {
-    background-color: #007bff; /* Color azul de la barra */
-    color: white; /* Color del texto del menú */
-    padding: 10px;
+.header-menu-container {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
     display: flex;
-    justify-content: center; /* Centra los elementos del menú */
-    gap: 20px; /* Espacio entre los enlaces del menú */
-    width: 100%; /* O el ancho que desees para la barra */
-    box-sizing: border-box; /* Incluye el padding en el ancho */
+    align-items: center;
+    gap: 30px; /* Espacio entre el logo (como primer elemento) y el menú */
+    box-sizing: border-box;
+    border-radius: 10px;
+    margin-top: auto; /* Alinea la parte inferior con la del logo */
+    height: fit-content; /* Ajusta altura al contenido */
+    flex-grow: 2; /* Ocupa el ancho restante */
 }
 
-.menu-bar a {
+.header-menu-container .menu-bar {
+    display: flex;
+    align-items: center;
+    gap: 110px; /* Espacio entre los enlaces del menú */
+}
+
+.header-menu-container .menu-bar a {
     color: white;
     text-decoration: none;
+    padding: 5px 15px;
 }
 
-.menu-bar a:hover {
+.header-menu-container .menu-bar a:hover {
     text-decoration: underline;
 }
 
-/* Estilos para el contenedor del contenido principal */
+/* Estilos para el contenedor principal de la página */
 .container {
-    margin-top: 20px; /* Espacio entre el menú y el contenido */
-    padding: 20px;
-    background-color: white; /* Fondo del contenido */
-    border: 1px solid #ddd; /* Borde opcional */
+    margin-top: 20px;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+/* Estilos para el body */
+body {
+    background-color: #f8f9fa;
+    margin: 0;
 }
