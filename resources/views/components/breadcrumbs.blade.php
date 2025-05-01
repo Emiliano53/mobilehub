@@ -3,9 +3,15 @@
         <ol class="breadcrumb">
             @foreach ($breadcrumbs as $label => $url)
                 @if ($loop->last)
-                    <li class="breadcrumb-item active" aria-current="page">{{ $label }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ is_array($label) ? 'Página actual' : $label }}
+                    </li>
                 @else
-                    <li class="breadcrumb-item"><a href="{{ $url }}">{{ $label }}</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ is_array($url) ? '#' : $url }}">
+                            {{ is_array($label) ? 'Inicio' : $label }}
+                        </a>
+                    </li>
                 @endif
             @endforeach
         </ol>

@@ -1,49 +1,84 @@
-@extends('components.layout')
-
+@extends("components.layout")
 @section('content')
 @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 @endcomponent
+
 <div class="container">
-    <div class="window">
-        <div class="content">
-            <h1>LISTA DE ACCESORIOS</h1>
-            <div class="button-group mb-3">
-                <a href="{{ url('/catalogos/accesorios/create') }}" class="btn btn-primary">Crear Accesorio</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Lista de Accesorios</h1>
+        <a href="{{ route('catalogos.accesorios.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Agregar
+        </a>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mb-4">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="border-0">Nombre</th>
+                            <th class="border-0">Tipo</th>
+                            <th class="border-0">Marca</th>
+                            <th class="border-0 text-end">Precio</th>
+                            <th class="border-0 text-center">Existencia</th>
+                            <th class="border-0 text-center">Estado</th>
+                            <th class="border-0 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($accesorios as $accesorio)
+                        <tr>
+                            <td class="align-middle">{{ $accesorio->nombre }}</td>
+                            <td class="align-middle">{{ $accesorio->tipo }}</td>
+                            <td class="align-middle">{{ $accesorio->marca }}</td>
+                            <td class="align-middle text-end">${{ number_format($accesorio->precio, 2) }}</td>
+                            <td class="align-middle text-center">{{ $accesorio->existencia }}</td>
+                            <td class="align-middle text-center">
+                                {{ $accesorio->estado == 1 ? 'Activo' : 'Inactivo' }}
+                            </td>
+                            <td class="align-middle text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('catalogos.accesorios.edit', $accesorio->id_accesorios) }}" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                    <form action="{{ route('catalogos.accesorios.destroy', $accesorio->id_accesorios) }}" 
+                                          method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('¿Estás seguro de eliminar este accesorio?')">
+                                            <i class="fas fa-trash-alt"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">No hay accesorios registrados</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Marca</th>
-                        <th>Precio</th>
-                        <th>Existencia</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($accesorios as $accesorio)
-                    <tr>
-                        <td>{{ $accesorio->id_accesorios }}</td>
-                        <td>{{ $accesorio->nombre }}</td>
-                        <td>{{ $accesorio->tipo }}</td>
-                        <td>{{ $accesorio->marca }}</td>
-                        <td>{{ $accesorio->precio }}</td>
-                        <td>{{ $accesorio->existencia }}</td>
-                        <td>
-                            <a href="{{ url('/catalogos/accesorios/' . $accesorio->id_accesorios . '/edit') }}" class="btn btn-sm btn-warning">Editar</a>
-                            <form action="{{ url('/catalogos/accesorios/' . $accesorio->id_accesorios) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
     </div>
+
+    @if($accesorios->hasPages())
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Paginación de accesorios">
+            {{ $accesorios->onEachSide(1)->links('pagination::bootstrap-5') }}
+        </nav>
+    </div>
+    @endif
 </div>
 @endsection

@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Ventas</h5>
                     <p class="card-text">Administra tus ventas</p>
-                    <a href="{{ route('catalogos.ventas') }}" class="btn btn-light">Ver Ventas</a>
+                    <a href="{{ route('catalogos.ventas.index') }}" class="btn btn-light">Ver Ventas</a>
                 </div>
             </div>
         </div>

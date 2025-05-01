@@ -24,12 +24,11 @@
                         <td>${{ number_format($servicio->costo, 2) }}</td>
                         <td>{{ $servicio->estado }}</td>
                         <td>
-                            
-                            <a href="{{url('/catalogos/servicios/edit', $servicio->id_servicio) }}" class="btn btn-warning btn-sm">Editar</a>
-                            <form action="{{ url('/catalogos/servicios.destroy', $servicio->id_servicio) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('catalogos.servicios.edit', $servicio->id_servicio) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <form action="{{ route('catalogos.servicios.destroy', $servicio->id_servicio) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este servicio?')">Eliminar</button>
                             </form>
                         </td>
                     </tr>

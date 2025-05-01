@@ -1,29 +1,34 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use App\Models\Servicio;
 use App\Models\Accesorio;
 use App\Models\Cliente;
 use App\Models\Venta;
+use Carbon\Carbon;
 
 class CatalogosController extends Controller
 {
+    // Método Home
     public function home(): View
     {
-        return view('home', ["breadcrumbs" => []]);
+        return view('home', [
+            "breadcrumbs" => []
+        ]);
     }
 
+    // ==================== MÉTODOS PARA SERVICIOS ====================
     public function servicios(): View
     {
         $servicios = Servicio::all();
         return view('catalogos.servicios', [
             'servicios' => $servicios,
             "breadcrumbs" => [
-                "inicio" => url("/"),
-                "servicios" => url("/catalogos/servicios")
+                ['title' => 'Inicio', 'url' => route('home')],
+                ['title' => 'Servicios', 'url' => '']
             ]
         ]);
     }
@@ -32,75 +37,82 @@ class CatalogosController extends Controller
     {
         return view('catalogos.servicios_create', [
             "breadcrumbs" => [
-                "inicio" => url("/"),
-                "servicios" => url("/catalogos/servicios"), 
-                "agregar" => url("/catalogos/servicios/create")
+                ['title' => 'Inicio', 'url' => route('home')],
+                ['title' => 'Servicios', 'url' => route('catalogos.servicios')],
+                ['title' => 'Crear Servicio', 'url' => '']
             ]
         ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'descripcion' => 'required|string|max:255',
             'estado' => 'nullable|string|max:50',
             'precio' => 'required|numeric|min:0',
         ]);
 
-        $servicio = new Servicio();
-        $servicio->descripcion_servicio = $request->input('descripcion');
-        $servicio->estado = $request->input('estado');
-        $servicio->costo = $request->input('precio');
-        $servicio->save();
+        Servicio::create([
+            'descripcion_servicio' => $validated['descripcion'],
+            'estado' => $validated['estado'],
+            'costo' => $validated['precio']
+        ]);
 
-        return redirect('/catalogos/servicios')->with('success', 'Servicio guardado exitosamente!');
+        return redirect()->route('catalogos.servicios')
+               ->with('success', 'Servicio creado exitosamente');
     }
 
-    public function edit($id)
+    public function editServicio($id): View
     {
         $servicio = Servicio::findOrFail($id);
         return view('catalogos.servicios_edit', [
             'servicio' => $servicio,
             "breadcrumbs" => [
-                "inicio" => url("/"),
-                "servicios" => url("/catalogos/servicios"),
-                "editar" => url("/catalogos/servicios/{$id}/edit")
+                ['title' => 'Inicio', 'url' => route('home')],
+                ['title' => 'Servicios', 'url' => route('catalogos.servicios')],
+                ['title' => 'Editar Servicio', 'url' => '']
             ]
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function updateServicio(Request $request, $id)
     {
-        $request->validate([
-            'descripcion' => 'required|string|max:255',
-            'estado' => 'nullable|string|max:50',
-            'precio' => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'descripcion_servicio' => 'required|string|max:255',
+            'costo' => 'required|numeric|min:0.01',
+            'estado' => 'required|in:Activo,Inactivo'
         ]);
-
+    
         $servicio = Servicio::findOrFail($id);
-        $servicio->descripcion_servicio = $request->input('descripcion');
-        $servicio->estado = $request->input('estado');
-        $servicio->costo = $request->input('precio');
-        $servicio->save();
-
-        return redirect('/catalogos/servicios')->with('success', 'Servicio actualizado exitosamente!');
+        $servicio->update([
+            'descripcion_servicio' => $validated['descripcion_servicio'],
+            'costo' => $validated['costo'],
+            'estado' => $validated['estado']
+        ]);
+    
+        return redirect()->route('catalogos.servicios')
+               ->with('success', 'Servicio actualizado exitosamente');
     }
 
-    public function destroy($id)
+    public function destroyServicio($id)
     {
         $servicio = Servicio::findOrFail($id);
         $servicio->delete();
-        return redirect('/catalogos/servicios')->with('success', 'Servicio eliminado exitosamente!');
+
+        return redirect()->route('catalogos.servicios')
+               ->with('success', 'Servicio eliminado exitosamente');
     }
 
+    // ==================== MÉTODOS PARA ACCESORIOS ====================
     public function accesorios(): View
     {
-        $accesorios = Accesorio::all();
+        $accesorios = Accesorio::orderBy('nombre')->paginate(10);
+        
         return view('catalogos.accesorios', [
             'accesorios' => $accesorios,
             "breadcrumbs" => [
-                "inicio" => url("/"),
-                "accesorios" => url("/catalogos/accesorios")
+                ['title' => 'Inicio', 'url' => route('home')],
+                ['title' => 'Accesorios', 'url' => '']
             ]
         ]);
     }
@@ -109,16 +121,16 @@ class CatalogosController extends Controller
     {
         return view('catalogos.accesorios_create', [
             "breadcrumbs" => [
-                "inicio" => url("/"),
-                "accesorios" => url("/catalogos/accesorios"),
-                "agregar" => url("/catalogos/accesorios/create")
+                ['title' => 'Inicio', 'url' => route('home')],
+                ['title' => 'Accesorios', 'url' => route('catalogos.accesorios')],
+                ['title' => 'Crear Accesorio', 'url' => '']
             ]
         ]);
     }
 
     public function storeAccesorio(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'tipo' => 'required|string|max:50',
             'marca' => 'required|string|max:50',
@@ -126,189 +138,264 @@ class CatalogosController extends Controller
             'existencia' => 'required|integer|min:0',
         ]);
 
-        $accesorio = new Accesorio();
-        $accesorio->nombre = $request->input('nombre');
-        $accesorio->tipo = $request->input('tipo');
-        $accesorio->marca = $request->input('marca');
-        $accesorio->precio = $request->input('precio');
-        $accesorio->existencia = $request->input('existencia');
-        $accesorio->save();
+        Accesorio::create($validated);
 
-        return redirect('/catalogos/accesorios')->with('success', 'Accesorio guardado exitosamente!');
+        return redirect()->route('catalogos.accesorios')
+               ->with('success', 'Accesorio creado exitosamente');
     }
 
-    public function editAccesorio($id)
+    public function editAccesorio(Accesorio $accesorio): View
     {
-        $accesorio = Accesorio::findOrFail($id);
         return view('catalogos.accesorios_edit', [
             'accesorio' => $accesorio,
             "breadcrumbs" => [
-                "inicio" => url("/"),
-                "accesorios" => url("/catalogos/accesorios"),
-                "editar" => url("/catalogos/accesorios/{$id}/edit")
+                ['title' => 'Inicio', 'url' => route('home')],
+                ['title' => 'Accesorios', 'url' => route('catalogos.accesorios')],
+                ['title' => 'Editar Accesorio', 'url' => '']
             ]
         ]);
     }
 
-    public function updateAccesorio(Request $request, $id)
+    public function updateAccesorio(Request $request, Accesorio $accesorio)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:100',
             'tipo' => 'required|string|max:50',
             'marca' => 'required|string|max:50',
             'precio' => 'required|numeric|min:0',
             'existencia' => 'required|integer|min:0',
+            'estado' => 'required|in:Activo,Inactivo'
         ]);
 
-        $accesorio = Accesorio::findOrFail($id);
-        $accesorio->nombre = $request->input('nombre');
-        $accesorio->tipo = $request->input('tipo');
-        $accesorio->marca = $request->input('marca');
-        $accesorio->precio = $request->input('precio');
-        $accesorio->existencia = $request->input('existencia');
-        $accesorio->save();
+        $accesorio->update([
+            ...$validated,
+            'estado' => $validated['estado'] == 'Activo'
+        ]);
 
-        return redirect('/catalogos/accesorios')->with('success', 'Accesorio actualizado exitosamente!');
+        return redirect()->route('catalogos.accesorios')
+               ->with('success', 'Accesorio actualizado exitosamente');
     }
 
-    public function destroyAccesorio($id)
+    public function destroyAccesorio(Accesorio $accesorio)
     {
-        $accesorio = Accesorio::findOrFail($id);
         $accesorio->delete();
-        return redirect('/catalogos/accesorios')->with('success', 'Accesorio eliminado exitosamente!');
+        return redirect()->route('catalogos.accesorios')
+               ->with('success', 'Accesorio eliminado exitosamente');
     }
 
-    public function ventas(): View
-    {
-        // Carga las relaciones cliente y accesorios
-        $ventas = Venta::with(['cliente', 'accesorios'])->get();
+    // ==================== MÉTODOS PARA VENTAS ====================
+  // Métodos específicos para Ventas
+  public function ventas(Request $request): View
+  {
+      $query = Venta::with('cliente')->orderBy('fecha', 'desc');
 
-        return view('catalogos.ventas', [
-            'ventas' => $ventas,
-            "breadcrumbs" => [
-                "inicio" => url("/"),
-                "ventas" => url("/catalogos/ventas")
-            ]
-        ]);
-    }
+      if ($request->has('search')) {
+          $query->whereHas('cliente', function($q) use ($request) {
+              $q->where('nombre', 'LIKE', "%{$request->search}%");
+          });
+      }
 
-    public function ventascreate(): View
-    {
-        $clientes = Cliente::all(); // Carga todos los clientes
-        $servicios = Servicio::all(); // Carga todos los servicios
-        $productos = Accesorio::all(); // Carga todos los productos (accesorios)
+      return view('catalogos.ventas', [
+          'ventas' => $query->paginate(10),
+          'breadcrumbs' => [
+              ['title' => 'Inicio', 'url' => route('home')],
+              ['title' => 'Ventas', 'url' => '']
+          ]
+      ]);
+  }
 
-        return view('catalogos.ventas_create', [
-            'clientes' => $clientes,
-            'servicios' => $servicios,
-            'productos' => $productos,
-            'breadcrumbs' => [
-                'Inicio' => url('/'),
-                'Ventas' => url('/catalogos/ventas'),
-                'Registrar Venta' => url('/catalogos/ventas/create'),
-            ],
-        ]);
-    }
+  public function ventascreate(): View
+  {
+      return view('catalogos.ventas_create', [
+          'clientes' => Cliente::all(),
+          'servicios' => Servicio::all(),
+          'productos' => Accesorio::all(),
+          'breadcrumbs' => [
+              ['title' => 'Inicio', 'url' => route('home')],
+              ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
+              ['title' => 'Nueva Venta', 'url' => '']
+          ]
+      ]);
+  }
 
-    public function ventasCreateExisting()
-    {
-        $clientes = Cliente::all(); // Cargar todos los clientes registrados
-        $servicios = Servicio::all(); // Cargar todos los servicios disponibles
-        $productos = Accesorio::all(); // Cargar todos los productos disponibles
+  public function ventasCreateExisting(): View
+  {
+      return view('catalogos.ventas_create_existing', [
+          'clientes' => Cliente::all(),
+          'servicios' => Servicio::all(),
+          'productos' => Accesorio::all(),
+          'breadcrumbs' => [
+              ['title' => 'Inicio', 'url' => route('home')],
+              ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
+              ['title' => 'Nueva Venta (Cliente Existente)', 'url' => '']
+          ]
+      ]);
+  }
 
-        return view('catalogos.ventas_create_existing', [
-            'clientes' => $clientes,
-            'servicios' => $servicios,
-            'productos' => $productos,
-            'breadcrumbs' => [
-                'Inicio' => url('/'),
-                'Ventas' => url('/catalogos/ventas'),
-                'Registrar Venta - Cliente Existente' => url('/catalogos/ventas/create-existing'),
-            ],
-        ]);
-    }
+  public function storeVenta(Request $request)
+  {
+      $validated = $request->validate([
+          'cliente_opcion' => 'required|in:nuevo,existente',
+          'cliente_id' => 'nullable|required_if:cliente_opcion,existente|exists:clientes,id',
+          'nombre' => 'nullable|required_if:cliente_opcion,nuevo|string|max:100',
+          'direccion' => 'nullable|string|max:255',
+          'telefono' => 'nullable|string|max:20',
+          'fecha' => 'required|date',
+          'total' => 'required|numeric|min:0',
+          'servicios' => 'nullable|array',
+          'productos' => 'nullable|array',
+          'metodo_pago' => 'nullable|string|max:50'
+      ]);
 
-    public function storeVenta(Request $request)
-    {
-        $request->validate([
-            'cliente_opcion' => 'required|in:nuevo,existente',
-            'cliente_id' => 'nullable|exists:cliente,id_cliente',
-            'nombre' => 'nullable|required_if:cliente_opcion,nuevo|string|max:100',
-            'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:20',
-            'fecha' => 'required|date',
-            'total' => 'required|numeric|min:0',
-        ]);
+      DB::beginTransaction();
+      try {
+          if ($validated['cliente_opcion'] === 'nuevo') {
+              $cliente = Cliente::create([
+                  'nombre' => $validated['nombre'],
+                  'direccion' => $validated['direccion'],
+                  'telefono' => $validated['telefono']
+              ]);
+              $clienteId = $cliente->id;
+          } else {
+              $clienteId = $validated['cliente_id'];
+          }
 
-        // Determinar cliente
-        if ($request->cliente_opcion === 'nuevo') {
-            $cliente = new Cliente();
-            $cliente->nombre = $request->input('nombre');
-            $cliente->direccion = $request->input('direccion');
-            $cliente->telefono = $request->input('telefono');
-            $cliente->save();
+          $venta = Venta::create([
+              'fk_id_cliente' => $clienteId,
+              'fecha' => $validated['fecha'],
+              'total' => $validated['total'],
+              'metodo_pago' => $validated['metodo_pago'] ?? null,
+              'activo' => true
+          ]);
 
-            $cliente_id = $cliente->id_cliente;
-        } else {
-            $cliente_id = $request->input('cliente_id');
-        }
+          if (!empty($validated['servicios'])) {
+              $serviciosData = [];
+              foreach ($validated['servicios'] as $servicioId) {
+                  $servicio = Servicio::find($servicioId);
+                  $serviciosData[$servicioId] = [
+                      'precio_unitario' => $servicio->costo,
+                      'cantidad' => 1,
+                      'subtotal' => $servicio->costo
+                  ];
+              }
+              $venta->servicios()->attach($serviciosData);
+          }
 
-        // Crear la venta
-        $venta = new Venta();
-        $venta->fk_id_cliente = $cliente_id;
-        $venta->fecha = $request->input('fecha');
-        $venta->total = $request->input('total');
-        $venta->descripcion = $request->input('descripcion', null);
-        $venta->estado = 1;
-        $venta->save();
+          if (!empty($validated['productos'])) {
+              $productosData = [];
+              foreach ($validated['productos'] as $productoId) {
+                  $producto = Accesorio::find($productoId);
+                  $productosData[$productoId] = [
+                      'precio_unitario' => $producto->precio,
+                      'cantidad' => 1,
+                      'subtotal' => $producto->precio
+                  ];
+              }
+              $venta->accesorios()->attach($productosData);
+          }
 
-        // Asociar servicios y productos
-        if ($request->filled('servicios')) {
-            $venta->servicios()->attach($request->input('servicios'));
-        }
-        if ($request->filled('productos')) {
-            $venta->accesorios()->attach($request->input('productos'));
-        }
+          DB::commit();
 
-        return redirect('/catalogos/ventas')->with('success', 'Venta registrada exitosamente!');
-    }
+          return redirect()->route('catalogos.ventas.index')
+                 ->with('success', 'Venta registrada exitosamente');
 
-    public function editVenta($id)
-    {
-        $venta = Venta::with('cliente')->findOrFail($id);
-        $clientes = Cliente::all();
-        return view('catalogos.ventas_edit', [
-            'venta' => $venta,
-            'clientes' => $clientes,
-            "breadcrumbs" => [
-                "inicio" => url("/"),
-                "ventas" => url("/catalogos/ventas"),
-                "editar" => url("/catalogos/ventas/{$id}/edit")
-            ]
-        ]);
-    }
+      } catch (\Exception $e) {
+          DB::rollBack();
+          return back()->withInput()->withErrors(['error' => 'Error al registrar la venta: ' . $e->getMessage()]);
+      }
+  }
 
-    public function updateVenta(Request $request, $id)
-    {
-        $request->validate([
-            'cliente_id' => 'required|exists:cliente,id_cliente', // Ajusta la validación a la clave primaria real
-            'fecha' => 'required|date',
-            'total' => 'required|numeric|min:0',
-        ]);
+  public function detallesVenta($id): View
+  {
+      $venta = Venta::with([
+          'cliente',
+          'servicios' => function($query) {
+              $query->select('servicio.*', 'detalle_servicio_venta.precio_unitario', 
+                            'detalle_servicio_venta.cantidad', 'detalle_servicio_venta.subtotal');
+          },
+          'accesorios' => function($query) {
+              $query->select('accesorios.*', 'detalle_venta_accesorio.precio_unitario',
+                            'detalle_venta_accesorio.cantidad', 'detalle_venta_accesorio.subtotal');
+          }
+      ])->findOrFail($id);
 
-        $venta = Venta::findOrFail($id);
-        $venta->cliente_id = $request->input('cliente_id');
-        $venta->fecha = $request->input('fecha');
-        $venta->total = $request->input('total');
-        $venta->save();
+      return view('catalogos.venta_detalle', [
+          'venta' => $venta,
+          'breadcrumbs' => [
+              ['title' => 'Inicio', 'url' => route('home')],
+              ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
+              ['title' => 'Detalles de Venta #'.$venta->id, 'url' => '']
+          ]
+      ]);
+  }
 
-        return redirect('/catalogos/ventas')->with('success', 'Venta actualizada exitosamente!');
-    }
+  public function editVenta($id): View
+  {
+      $venta = Venta::with('cliente')->findOrFail($id);
+      
+      return view('catalogos.ventas_edit', [
+          'venta' => $venta,
+          'breadcrumbs' => [
+              ['title' => 'Inicio', 'url' => route('home')],
+              ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
+              ['title' => 'Editar Venta #'.$venta->id, 'url' => '']
+          ]
+      ]);
+  }
+  public function updateVenta(Request $request, $id)
+  {
+      $validated = $request->validate([
+          'estado' => 'required|string|in:Activo,Inactivo', // Validación para estado
+          'metodo_pago' => 'nullable|string|max:50'
+      ]);
+  
+      $venta = Venta::findOrFail($id);
+      $venta->update($validated);
+  
+      return redirect()->route('catalogos.ventas.index')
+             ->with('success', 'Venta actualizada correctamente');
+  }
 
-    public function destroyVenta($id)
-    {
-        $venta = Venta::findOrFail($id);
-        $venta->delete();
-        return redirect('/catalogos/ventas')->with('success', 'Venta eliminada exitosamente!');
-    }
-}
+  public function destroyVenta($id)
+  {
+      try {
+          $venta = Venta::findOrFail($id);
+          $venta->delete();
+
+          return redirect()->route('catalogos.ventas.index')
+                 ->with('success', 'Venta eliminada correctamente');
+
+      } catch (\Exception $e) {
+          return back()->withErrors(['error' => 'Error al eliminar: ' . $e->getMessage()]);
+      }
+  }
+
+  public function cambiarEstado(Request $request, Venta $venta)
+  {
+      $request->validate([
+          'activo' => 'required|boolean'
+      ]);
+
+      $venta->update(['activo' => $request->activo]);
+
+      return back()->with('success', 'Estado de la venta actualizado');
+  }
+
+  public function activateVenta($id)
+  {
+      $venta = Venta::findOrFail($id);
+      $venta->update(['activo' => true]);
+
+      return redirect()->route('catalogos.ventas.index')
+             ->with('success', 'Venta activada correctamente');
+  }
+
+  public function deactivateVenta($id)
+  {
+      $venta = Venta::findOrFail($id);
+      $venta->update(['activo' => false]);
+
+      return redirect()->route('catalogos.ventas.index')
+             ->with('success', 'Venta desactivada correctamente');
+  }
+}  
