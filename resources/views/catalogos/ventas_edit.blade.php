@@ -1,4 +1,5 @@
-@extends('components.layout')
+@extends('layouts.app')
+@section('title', 'Editar Venta')
 
 @section('content')
 <div class="container py-4">

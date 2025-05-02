@@ -186,7 +186,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top">
         <div class="container">
-            <a class="logo-brand" href="#">
+            <a class="logo-brand" href="{{ route('home') }}">
                 <img src="{{ asset('images/logo.jpeg') }}" alt="MobileHub" class="logo-rounded">
                 <span class="brand-name d-none d-md-inline">MobileHub</span>
             </a>
@@ -218,7 +218,8 @@
                         </a>
                     </li>
                     <li class="nav-item nav-item-custom ms-lg-2">
-                        <a class="nav-link text-danger" href="{{ url('/logout') }}">
+                        <a class="nav-link text-danger" href="{{ route('logout') }}" 
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt me-2"></i> Salir
                         </a>
                     </li>
@@ -226,6 +227,10 @@
             </div>
         </div>
     </nav>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 
     <!-- Contenido Principal -->
     <div class="container main-container">

@@ -1,4 +1,5 @@
-@extends("components.layout")
+@extends('layouts.app')
+@section('title', 'Servicios')
 @section('content')
 @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 @endcomponent
@@ -35,5 +36,8 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="mt-4">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">Volver</a>
+        </div>
     </div>
 @endsection

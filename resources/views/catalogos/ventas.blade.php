@@ -1,4 +1,5 @@
-@extends('components.layout')
+@extends('layouts.app')
+@section('title', 'Ventas')
 
 @section('content')
 <div class="container">
@@ -59,6 +60,9 @@
                 {{ $ventas->links() }}
             </div>
         </div>
+    </div>
+    <div class="mt-4">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">Volver</a>
     </div>
 </div>
 @endsection

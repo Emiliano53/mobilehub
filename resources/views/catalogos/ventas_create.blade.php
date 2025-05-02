@@ -1,4 +1,5 @@
-@extends('components.layout')
+@extends('layouts.app')
+@section('title', 'Registrar Venta')
 
 @section('content')
     @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])

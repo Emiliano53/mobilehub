@@ -1,4 +1,5 @@
-@extends("components.layout")
+@extends('layouts.app')
+@section('title', 'Lista de Accesorios')
 @section('content')
 @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 @endcomponent
@@ -80,5 +81,8 @@
         </nav>
     </div>
     @endif
+    <div class="mt-4">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">Volver</a>
+    </div>
 </div>
 @endsection

@@ -1,4 +1,5 @@
-@extends("components.layout")
+@extends('layouts.app')
+@section('title', 'Editar Accesorio')
 @section('content')
 @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 @endcomponent
