@@ -51,15 +51,6 @@
                                        class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Editar
                                     </a>
-                                    <form action="{{ route('catalogos.accesorios.destroy', $accesorio->id_accesorios) }}" 
-                                          method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('¿Estás seguro de eliminar este accesorio?')">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>

@@ -23,7 +23,8 @@ class CatalogosController extends Controller
     // ==================== MÉTODOS PARA SERVICIOS ====================
     public function servicios(): View
     {
-        $servicios = Servicio::all();
+        $servicios = Servicio::where('estado', 'Activo')->get(); // Filtrar solo los servicios activos
+
         return view('catalogos.servicios', [
             'servicios' => $servicios,
             "breadcrumbs" => [
@@ -106,8 +107,8 @@ class CatalogosController extends Controller
     // ==================== MÉTODOS PARA ACCESORIOS ====================
     public function accesorios(): View
     {
-        $accesorios = Accesorio::orderBy('nombre')->paginate(10);
-        
+        $accesorios = Accesorio::where('estado', 1)->paginate(10); // Filtrar solo los accesorios activos
+
         return view('catalogos.accesorios', [
             'accesorios' => $accesorios,
             "breadcrumbs" => [
@@ -190,17 +191,15 @@ class CatalogosController extends Controller
       $query = Venta::with('cliente')->orderBy('fecha', 'desc');
 
       if ($request->has('search')) {
-          $query->whereHas('cliente', function($q) use ($request) {
-              $q->where('nombre', 'LIKE', "%{$request->search}%");
+          $query->whereHas('cliente', function ($q) use ($request) {
+              $q->where('nombre', 'like', '%' . $request->search . '%');
           });
       }
 
+      $ventas = $query->paginate(10);
+
       return view('catalogos.ventas', [
-          'ventas' => $query->paginate(10),
-          'breadcrumbs' => [
-              ['title' => 'Inicio', 'url' => route('home')],
-              ['title' => 'Ventas', 'url' => '']
-          ]
+          'ventas' => $ventas,
       ]);
   }
 
@@ -344,14 +343,20 @@ class CatalogosController extends Controller
   }
   public function updateVenta(Request $request, $id)
   {
+      // Validar los datos enviados desde el formulario
       $validated = $request->validate([
-          'estado' => 'required|string|in:Activo,Inactivo', // Validación para estado
+          'activo' => 'required|boolean', // Validar 'activo' como booleano
           'metodo_pago' => 'nullable|string|max:50'
       ]);
-  
+
+      // Buscar la venta y actualizarla
       $venta = Venta::findOrFail($id);
-      $venta->update($validated);
-  
+      $venta->update([
+          'estado' => $validated['activo'], // Mapear 'activo' a 'estado'
+          'metodo_pago' => $validated['metodo_pago']
+      ]);
+
+      // Redirigir con un mensaje de éxito
       return redirect()->route('catalogos.ventas.index')
              ->with('success', 'Venta actualizada correctamente');
   }
@@ -398,4 +403,4 @@ class CatalogosController extends Controller
       return redirect()->route('catalogos.ventas.index')
              ->with('success', 'Venta desactivada correctamente');
   }
-}  
+}

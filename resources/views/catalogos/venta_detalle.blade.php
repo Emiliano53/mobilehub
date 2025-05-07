@@ -26,7 +26,6 @@
                     <h4><strong>Información de Pago</strong></h4>
                     <hr>
                     <p class="mb-1"><strong>Total:</strong> ${{ number_format($venta->total, 2) }}</p>
-                    <p class="mb-1"><strong>Método de pago:</strong> {{ $venta->metodo_pago ?? 'No especificado' }}</p>
                     <p class="mb-0"><strong>Estado:</strong> <strong class="{{ $venta->activo ? 'text-success' : 'text-danger' }}">{{ $venta->activo ? 'Activo' : 'Inactivo' }}</strong></p>
                 </div>
             </div>

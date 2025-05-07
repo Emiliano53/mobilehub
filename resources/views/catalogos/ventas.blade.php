@@ -30,7 +30,6 @@
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th class="text-end">Total</th>
-                            <th class="text-center">Estado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -41,11 +40,6 @@
                             <td>{{ $venta->cliente->nombre ?? 'Cliente no especificado' }}</td>
                             <td>{{ $venta->fecha->format('d/m/Y') }}</td>
                             <td class="text-end">${{ number_format($venta->total, 2) }}</td>
-                            <td class="text-center">
-                                <span class="badge {{ $venta->activo ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $venta->activo ? 'Activo' : 'Inactivo' }}
-                                </span>
-                            </td>
                             <td class="text-center">
                                 <a href="{{ route('catalogos.ventas.detalles', $venta->id) }}" class="btn btn-sm btn-primary">Detalles</a>
                                 <a href="{{ route('catalogos.ventas.edit', $venta->id) }}" class="btn btn-sm btn-warning ms-1">Editar</a>

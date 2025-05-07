@@ -43,7 +43,6 @@
                     </div>
                     <div class="col-md-6">
                         <p class="mb-2"><strong>Total:</strong> ${{ number_format($venta->total, 2) }}</p>
-                        <p class="mb-0"><strong>Método de pago:</strong> {{ $venta->metodo_pago ?? 'No especificado' }}</p>
                     </div>
                 </div>
             </div>
@@ -53,23 +52,12 @@
                 @method('PUT')
                 
                 <div class="mb-4">
-                    <label for="estado" class="form-label fw-semibold">Estado de la Venta</label>
-                    <select name="activo" id="estado" class="form-select" required>
+                    <label for="activo" class="form-label fw-semibold">Estado de la Venta</label>
+                    <select name="activo" id="activo" class="form-select" required>
                         <option value="1" {{ $venta->activo ? 'selected' : '' }}>Activo</option>
                         <option value="0" {{ !$venta->activo ? 'selected' : '' }}>Inactivo</option>
                     </select>
                     <small class="text-muted">Las ventas inactivas no aparecerán en algunos reportes</small>
-                </div>
-
-                <div class="mb-4">
-                    <label for="metodo_pago" class="form-label fw-semibold">Método de Pago</label>
-                    <select name="metodo_pago" id="metodo_pago" class="form-select">
-                        <option value="">Seleccione un método</option>
-                        <option value="Efectivo" {{ $venta->metodo_pago == 'Efectivo' ? 'selected' : '' }}>Efectivo</option>
-                        <option value="Tarjeta de Crédito" {{ $venta->metodo_pago == 'Tarjeta de Crédito' ? 'selected' : '' }}>Tarjeta de Crédito</option>
-                        <option value="Transferencia" {{ $venta->metodo_pago == 'Transferencia' ? 'selected' : '' }}>Transferencia</option>
-                        <option value="Otro" {{ $venta->metodo_pago == 'Otro' ? 'selected' : '' }}>Otro</option>
-                    </select>
                 </div>
 
                 <div class="d-flex justify-content-between pt-3 border-top">
