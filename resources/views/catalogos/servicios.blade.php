@@ -4,10 +4,13 @@
 @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 @endcomponent
     <div class="container">
-        <h1>Lista de Servicios</h1>
-        <div class="col-auto titlebar-commands">
-            <a class="btn btn-primary" href="{{ route('catalogos.servicios.create') }}">Agregar</a>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Lista de Servicios</h1>
+            <a href="{{ route('catalogos.servicios.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> Agregar
+            </a>
         </div>
+
         
         <table class="table table-striped">
             <thead>

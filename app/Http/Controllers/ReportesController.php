@@ -6,12 +6,25 @@ use App\Models\Venta;
 use App\Models\Servicio;
 use App\Models\Accesorio;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class ReportesController extends Controller
 {
-    public function reportesGet(): View
+    public function reportesGet(Request $request): View
     {
-        return view('reportes.reportes', [
+        $query = Venta::with(['cliente', 'accesorios', 'servicios'])->orderBy('fecha', 'DESC');
+
+        // Aplicar filtro por rango de fechas si se proporciona
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+        }
+
+        // Obtener los resultados paginados
+        $ventas = $query->paginate(10);
+
+        // Pasar la variable $ventas a la vista
+        return view('reportes.reportesventas', [
+            'ventas' => $ventas,
             'breadcrumbs' => [
                 'Inicio' => url('/'),
                 'Reportes' => url('/reportes'),
@@ -19,16 +32,21 @@ class ReportesController extends Controller
         ]);
     }
 
-    public function reporteVentasGet(): View
+    public function reporteVentasGet(Request $request): View
     {
-        $ventas = Venta::with('accesorios')->orderBy('fecha', 'DESC')->get();
-        return view('reportes.ventas', [
+        $query = Venta::with(['cliente', 'accesorios', 'servicios'])->orderBy('fecha', 'DESC');
+
+        // Aplicar filtro por rango de fechas si se proporciona
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+        }
+
+        // Obtener los resultados paginados
+        $ventas = $query->paginate(10);
+
+        // Pasar la variable $ventas a la vista
+        return view('reportes.reportesventas', [
             'ventas' => $ventas,
-            'breadcrumbs' => [
-                'Inicio' => url('/'),
-                'Reportes' => url('/reportes'),
-                'Reporte de Ventas' => url('/reportes/ventas'),
-            ],
         ]);
     }
 

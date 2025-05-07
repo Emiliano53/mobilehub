@@ -53,10 +53,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}/deactivate', [CatalogosController::class, 'deactivateVenta'])->name('catalogos.ventas.desactivar');
     });
 
-    Route::prefix('reportes')->group(function() {
-        Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes');
-        Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas');
-        Route::get('/servicios', [ReportesController::class, 'reporteServiciosGet'])->name('reportes.servicios');
-        Route::get('/inventario', [ReportesController::class, 'reporteInventarioGet'])->name('reportes.inventario');
+    Route::prefix('reportes')->group(function () {
+        Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes'); // Ruta para "Ver Reportes"
+        Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas'); // Ruta para reportes de ventas
     });
 });
