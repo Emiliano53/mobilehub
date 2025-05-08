@@ -54,8 +54,8 @@
                 <div class="mb-4">
                     <label for="activo" class="form-label fw-semibold">Estado de la Venta</label>
                     <select name="activo" id="activo" class="form-select" required>
-                        <option value="1" {{ $venta->activo ? 'selected' : '' }}>Activo</option>
-                        <option value="0" {{ !$venta->activo ? 'selected' : '' }}>Inactivo</option>
+                        <option value="1" {{ $venta->activo ? 'selected' : '' }}>Inactivo</option>
+                        <option value="0" {{ !$venta->activo ? 'selected' : '' }}>Activo</option>
                     </select>
                     <small class="text-muted">Las ventas inactivas no aparecerán en algunos reportes</small>
                 </div>
