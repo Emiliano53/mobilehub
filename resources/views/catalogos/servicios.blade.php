@@ -27,7 +27,8 @@
                         <td>${{ number_format($servicio->costo, 2) }}</td>
                         <td>{{ $servicio->estado }}</td>
                         <td>
-                            <a href="{{ route('catalogos.servicios.edit', $servicio->id_servicio) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{{ route('catalogos.servicios.edit', $servicio->id_servicio) }}" class="btn btn-warning">
+                              <i class="fas fa-edit"></i> Editar
                         </td>
                     </tr>
                 @endforeach
