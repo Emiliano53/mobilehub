@@ -2,17 +2,16 @@
 @section('title', 'Detalles de Venta')
 
 @section('content')
+    @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+    @endcomponent
 <div class="container py-4">
     <div class="card">
-        <!-- Barra superior azul -->
         <div class="card-header bg-primary text-white">
             <h2 class="h4 mb-0">Detalles de Venta #{{ $venta->id }}</h2>
         </div>
         
         <div class="card-body">
-            <!-- Fila con dos columnas (sin cards internas) -->
             <div class="row mb-4">
-                <!-- Columna izquierda - Información del Cliente -->
                 <div class="col-md-6 mb-3 mb-md-0">
                     <h4><strong>Información del Cliente</strong></h4>
                     <hr>
@@ -21,7 +20,6 @@
                     <p class="mb-0"><strong>Fecha:</strong> {{ $venta->fecha->format('d/m/Y') }}</p>
                 </div>
                 
-                <!-- Columna derecha - Información de Pago -->
                 <div class="col-md-6">
                     <h4><strong>Información de Pago</strong></h4>
                     <hr>
@@ -30,14 +28,12 @@
                 </div>
             </div>
             
-            <!-- Descripción de la Venta -->
             <div class="mb-4">
                 <h4><strong>Descripción de la Venta</strong></h4>
                 <hr>
                 <p class="mb-0">{{ $venta->descripcion ?? 'Venta de productos y servicios' }}</p>
             </div>
             
-            <!-- Items Vendidos con Total -->
             <div class="mb-4">
                 <h4><strong>Items Vendidos</strong></h4>
                 <hr>
@@ -67,7 +63,6 @@
                             </tr>
                             @endforeach
                         </tbody>
-                        <!-- Total agregado -->
                         <tfoot>
                             <tr>
                                 <th colspan="2" class="text-end">Total:</th>
@@ -78,7 +73,6 @@
                 </div>
             </div>
             
-            <!-- Botón Volver -->
             <div class="text-end mt-4">
                 <a href="{{ route('catalogos.ventas.index') }}" class="btn btn-outline-primary">
                     <i class="fas fa-arrow-left"></i> Volver

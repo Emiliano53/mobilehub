@@ -28,8 +28,8 @@ class CatalogosController extends Controller
         return view('catalogos.servicios', [
             'servicios' => $servicios,
             "breadcrumbs" => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Servicios', 'url' => '']
+                'Inicio' => route('home'),
+                'Servicios' => null,
             ]
         ]);
     }
@@ -38,9 +38,9 @@ class CatalogosController extends Controller
     {
         return view('catalogos.servicios_create', [
             "breadcrumbs" => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Servicios', 'url' => route('catalogos.servicios')],
-                ['title' => 'Crear Servicio', 'url' => '']
+                'Inicio' => route('home'),
+                'Servicios' => route('catalogos.servicios'),
+                'Crear Servicio' => null
             ]
         ]);
     }
@@ -69,9 +69,9 @@ class CatalogosController extends Controller
         return view('catalogos.servicios_edit', [
             'servicio' => $servicio,
             "breadcrumbs" => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Servicios', 'url' => route('catalogos.servicios')],
-                ['title' => 'Editar Servicio', 'url' => '']
+                'Inicio' => route('home'),
+                'Servicios' => route('catalogos.servicios'),
+                'Editar Servicio' => null
             ]
         ]);
     }
@@ -112,8 +112,8 @@ class CatalogosController extends Controller
         return view('catalogos.accesorios', [
             'accesorios' => $accesorios,
             "breadcrumbs" => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Accesorios', 'url' => '']
+                'Inicio' => route('home'),
+                'Accesorios' => null
             ]
         ]);
     }
@@ -122,9 +122,9 @@ class CatalogosController extends Controller
     {
         return view('catalogos.accesorios_create', [
             "breadcrumbs" => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Accesorios', 'url' => route('catalogos.accesorios')],
-                ['title' => 'Crear Accesorio', 'url' => '']
+                'Inicio' => route('home'),
+                'Accesorios' => route('catalogos.accesorios'),
+                'Crear Accesorio' => null
             ]
         ]);
     }
@@ -150,9 +150,9 @@ class CatalogosController extends Controller
         return view('catalogos.accesorios_edit', [
             'accesorio' => $accesorio,
             "breadcrumbs" => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Accesorios', 'url' => route('catalogos.accesorios')],
-                ['title' => 'Editar Accesorio', 'url' => '']
+                'Inicio' => route('home'),
+                'Accesorios' => route('catalogos.accesorios'),
+                'Editar Accesorio' => null
             ]
         ]);
     }
@@ -200,6 +200,10 @@ class CatalogosController extends Controller
 
         return view('catalogos.ventas', [
             'ventas' => $ventas,
+            'breadcrumbs' => [
+                'Inicio' => route('home'),
+                'Ventas' => null,
+            ]
         ]);
     }
 
@@ -210,9 +214,9 @@ class CatalogosController extends Controller
             'servicios' => Servicio::all(),
             'productos' => Accesorio::all(),
             'breadcrumbs' => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
-                ['title' => 'Nueva Venta', 'url' => '']
+                'Inicio' => route('home'),
+                'Ventas' => route('catalogos.ventas.index'),
+                'Nueva Venta' => null
             ]
         ]);
     }
@@ -224,9 +228,9 @@ class CatalogosController extends Controller
             'servicios' => Servicio::all(),
             'productos' => Accesorio::all(),
             'breadcrumbs' => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
-                ['title' => 'Nueva Venta (Cliente Existente)', 'url' => '']
+                'Inicio' => route('home'),
+                'Ventas' => route('catalogos.ventas.index'),
+                'Nueva Venta (Cliente Existente)' => null
             ]
         ]);
     }
@@ -324,20 +328,20 @@ class CatalogosController extends Controller
             'cliente',
             'servicios' => function($query) {
                 $query->select('servicio.*', 'detalle_servicio_venta.precio_unitario',
-                                        'detalle_servicio_venta.cantidad', 'detalle_servicio_venta.subtotal');
+                                            'detalle_servicio_venta.cantidad', 'detalle_servicio_venta.subtotal');
             },
             'accesorios' => function($query) {
                 $query->select('accesorios.*', 'detalle_venta_accesorio.precio_unitario',
-                                        'detalle_venta_accesorio.cantidad', 'detalle_venta_accesorio.subtotal');
+                                            'detalle_venta_accesorio.cantidad', 'detalle_venta_accesorio.subtotal');
             }
         ])->findOrFail($id);
 
         return view('catalogos.venta_detalle', [
             'venta' => $venta,
             'breadcrumbs' => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
-                ['title' => 'Detalles de Venta #'.$venta->id, 'url' => '']
+                'Inicio' => route('home'),
+                'Ventas' => route('catalogos.ventas.index'),
+                'Detalles de Venta #' . $venta->id => null
             ]
         ]);
     }
@@ -349,9 +353,9 @@ class CatalogosController extends Controller
         return view('catalogos.ventas_edit', [
             'venta' => $venta,
             'breadcrumbs' => [
-                ['title' => 'Inicio', 'url' => route('home')],
-                ['title' => 'Ventas', 'url' => route('catalogos.ventas.index')],
-                ['title' => 'Editar Venta #'.$venta->id, 'url' => '']
+                'Inicio' => route('home'),
+                'Ventas' => route('catalogos.ventas.index'),
+                'Editar Venta #' . $venta->id => null
             ]
         ]);
     }
