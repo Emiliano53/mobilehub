@@ -7,6 +7,7 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 
+// Rutas de autenticación
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -15,12 +16,14 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
+// Rutas protegidas
 Route::middleware('auth')->group(function () {
+    // Home
     Route::get('/', function () {
         return view('home', ["breadcrumbs" => []]);
     })->name('home');
 
-    // Rutas protegidas
+    // ==================== RUTAS PARA SERVICIOS ====================
     Route::prefix('catalogos/servicios')->group(function() {
         Route::get('/', [CatalogosController::class, 'servicios'])->name('catalogos.servicios');
         Route::get('/create', [CatalogosController::class, 'servicioscreate'])->name('catalogos.servicios.create');
@@ -30,6 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{id}', [CatalogosController::class, 'destroyServicio'])->name('catalogos.servicios.destroy');
     });
 
+    // ==================== RUTAS PARA ACCESORIOS ====================
     Route::prefix('catalogos/accesorios')->group(function() {
         Route::get('/', [CatalogosController::class, 'accesorios'])->name('catalogos.accesorios');
         Route::get('/create', [CatalogosController::class, 'accesorioscreate'])->name('catalogos.accesorios.create');
@@ -39,22 +43,32 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{accesorio}', [CatalogosController::class, 'destroyAccesorio'])->name('catalogos.accesorios.destroy');
     });
 
+    // ==================== RUTAS PARA VENTAS (CORREGIDAS) ====================
     Route::prefix('catalogos/ventas')->group(function() {
-        Route::get('/', [CatalogosController::class, 'ventas'])->name('catalogos.ventas.index');
+        // Listado y creación
+        Route::get('/', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
         Route::get('/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
         Route::get('/create-existing', [CatalogosController::class, 'ventasCreateExisting'])->name('catalogos.ventas.create-existing');
         Route::post('/store', [CatalogosController::class, 'storeVenta'])->name('catalogos.ventas.store');
-        Route::get('/{id}/detalles', [CatalogosController::class, 'detallesVenta'])->name('catalogos.ventas.detalles');
-        Route::get('/{id}/edit', [CatalogosController::class, 'editVenta'])->name('catalogos.ventas.edit');
-        Route::put('/{id}', [CatalogosController::class, 'updateVenta'])->name('catalogos.ventas.update');
-        Route::delete('/{id}', [CatalogosController::class, 'destroyVenta'])->name('catalogos.ventas.destroy');
-        Route::post('/{venta}/cambiar-estado', [CatalogosController::class, 'cambiarEstado'])->name('ventas.cambiar-estado');
-        Route::put('/{id}/activate', [CatalogosController::class, 'activateVenta'])->name('catalogos.ventas.activar');
-        Route::put('/{id}/deactivate', [CatalogosController::class, 'deactivateVenta'])->name('catalogos.ventas.desactivar');
+        
+        // Detalles y edición
+        Route::get('/{venta}/detalles', [CatalogosController::class, 'detallesVenta'])->name('catalogos.ventas.detalles');
+        Route::get('/{venta}/edit', [CatalogosController::class, 'editVenta'])->name('catalogos.ventas.edit');
+        Route::put('/{venta}', [CatalogosController::class, 'updateVenta'])->name('catalogos.ventas.update');
+        
+        // Eliminación y cambio de estado
+        Route::delete('/{venta}', [CatalogosController::class, 'destroyVenta'])->name('catalogos.ventas.destroy');
+        Route::post('/{venta}/cambiar-estado', [CatalogosController::class, 'cambiarEstado'])->name('catalogos.ventas.cambiar-estado');
+        Route::put('/{venta}/activate', [CatalogosController::class, 'activateVenta'])->name('catalogos.ventas.activate');
+        Route::put('/{venta}/deactivate', [CatalogosController::class, 'deactivateVenta'])->name('catalogos.ventas.deactivate');
+        
+        // Reportes (opcional, podrían estar en otro grupo)
+        Route::get('/reporte', [CatalogosController::class, 'reporteVentas'])->name('catalogos.ventas.reporte');
     });
 
+    // ==================== RUTAS PARA REPORTES ====================
     Route::prefix('reportes')->group(function () {
-        Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes'); // Ruta para "Ver Reportes"
-        Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas'); // Ruta para reportes de ventas
+        Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes');
+        Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas');
     });
 });

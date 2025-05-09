@@ -186,7 +186,7 @@ class CatalogosController extends Controller
 
     // ==================== MÉTODOS PARA VENTAS ====================
     // Métodos específicos para Ventas
-    public function ventas(Request $request): View
+     public function ventas(Request $request): View
     {
         $query = Venta::with('cliente')->orderBy('fecha', 'desc');
 
@@ -211,11 +211,11 @@ class CatalogosController extends Controller
     {
         return view('catalogos.ventas_create', [
             'clientes' => Cliente::all(),
-            'servicios' => Servicio::all(),
-            'productos' => Accesorio::all(),
+            'servicios' => Servicio::where('estado', 'Activo')->get(),
+            'productos' => Accesorio::where('estado', 1)->get(),
             'breadcrumbs' => [
                 'Inicio' => route('home'),
-                'Ventas' => route('catalogos.ventas.index'),
+                'Ventas' => route('catalogos.ventas'),
                 'Nueva Venta' => null
             ]
         ]);
@@ -225,11 +225,11 @@ class CatalogosController extends Controller
     {
         return view('catalogos.ventas_create_existing', [
             'clientes' => Cliente::all(),
-            'servicios' => Servicio::all(),
-            'productos' => Accesorio::all(),
+            'servicios' => Servicio::where('estado', 'Activo')->get(),
+            'productos' => Accesorio::where('estado', 1)->get(),
             'breadcrumbs' => [
                 'Inicio' => route('home'),
-                'Ventas' => route('catalogos.ventas.index'),
+                'Ventas' => route('catalogos.ventas'),
                 'Nueva Venta (Cliente Existente)' => null
             ]
         ]);
@@ -239,86 +239,80 @@ class CatalogosController extends Controller
     {
         $validated = $request->validate([
             'cliente_opcion' => 'required|in:nuevo,existente',
-            'cliente_id' => 'nullable|required_if:cliente_opcion,existente|exists:clientes,id',
-            'nombre' => 'nullable|required_if:cliente_opcion,nuevo|string|max:100',
+            'cliente_id' => 'required_if:cliente_opcion,existente|exists:clientes,id_cliente',
+            'nombre' => 'required_if:cliente_opcion,nuevo|string|max:100',
             'direccion' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'fecha' => 'required|date',
             'total' => 'required|numeric|min:0',
-            'servicios' => 'nullable|array', // Ahora contendrá arrays con id y cantidad
-            'productos' => 'nullable|array', // Ahora contendrá arrays con id y cantidad
-            'metodo_pago' => 'nullable|string|max:50'
+            'servicios' => 'nullable|array',
+            'servicios.*.id' => 'required_with:servicios|exists:servicios,id_servicio',
+            'servicios.*.cantidad' => 'required_with:servicios|integer|min:1',
+            'productos' => 'nullable|array',
+            'productos.*.id' => 'required_with:productos|exists:accesorios,id_accesorios',
+            'productos.*.cantidad' => 'required_with:productos|integer|min:1',
+            'metodo_pago' => 'required|string|max:50'
         ]);
 
         DB::beginTransaction();
         try {
+            // Manejo del cliente
             if ($validated['cliente_opcion'] === 'nuevo') {
                 $cliente = Cliente::create([
                     'nombre' => $validated['nombre'],
-                    'direccion' => $validated['direccion'],
-                    'telefono' => $validated['telefono']
+                    'direccion' => $validated['direccion'] ?? null,
+                    'telefono' => $validated['telefono'] ?? null
                 ]);
-                $clienteId = $cliente->id;
+                $clienteId = $cliente->id_cliente;
             } else {
                 $clienteId = $validated['cliente_id'];
             }
 
+            // Crear la venta
             $venta = Venta::create([
                 'fk_id_cliente' => $clienteId,
                 'fecha' => $validated['fecha'],
                 'total' => $validated['total'],
-                'metodo_pago' => $validated['metodo_pago'] ?? null,
+                'metodo_pago' => $validated['metodo_pago'],
                 'activo' => true
             ]);
 
+            // Adjuntar servicios
             if (!empty($validated['servicios'])) {
-                $serviciosData = [];
-                foreach ($validated['servicios'] as $servicioInfo) {
-                    if (isset($servicioInfo['id']) && isset($servicioInfo['cantidad'])) {
-                        $servicio = Servicio::find($servicioInfo['id']);
-                        if ($servicio) {
-                            $precioUnitario = $servicio->costo;
-                            $cantidad = intval($servicioInfo['cantidad']);
-                            $subtotal = $precioUnitario * $cantidad;
-                            $serviciosData[$servicioInfo['id']] = [
-                                'precio_unitario' => $precioUnitario,
-                                'cantidad' => $cantidad,
-                                'subtotal' => $subtotal
-                            ];
-                        }
-                    }
+                foreach ($validated['servicios'] as $servicio) {
+                    $servicioModel = Servicio::find($servicio['id']);
+                    $venta->servicios()->attach($servicio['id'], [
+                        'precio_unitario' => $servicioModel->costo,
+                        'cantidad' => $servicio['cantidad'],
+                        'subtotal' => $servicioModel->costo * $servicio['cantidad']
+                    ]);
                 }
-                $venta->servicios()->attach($serviciosData);
             }
 
+            // Adjuntar productos
             if (!empty($validated['productos'])) {
-                $productosData = [];
-                foreach ($validated['productos'] as $productoInfo) {
-                    if (isset($productoInfo['id']) && isset($productoInfo['cantidad'])) {
-                        $producto = Accesorio::find($productoInfo['id']);
-                        if ($producto) {
-                            $precioUnitario = $producto->precio;
-                            $cantidad = intval($productoInfo['cantidad']);
-                            $subtotal = $precioUnitario * $cantidad;
-                            $productosData[$productoInfo['id']] = [
-                                'precio_unitario' => $precioUnitario,
-                                'cantidad' => $cantidad,
-                                'subtotal' => $subtotal
-                            ];
-                        }
-                    }
+                foreach ($validated['productos'] as $producto) {
+                    $productoModel = Accesorio::find($producto['id']);
+                    $venta->accesorios()->attach($producto['id'], [
+                        'precio_unitario' => $productoModel->precio,
+                        'cantidad' => $producto['cantidad'],
+                        'subtotal' => $productoModel->precio * $producto['cantidad']
+                    ]);
+                    
+                    // Actualizar existencia
+                    $productoModel->decrement('existencia', $producto['cantidad']);
                 }
-                $venta->accesorios()->attach($productosData);
             }
 
             DB::commit();
 
-            return redirect()->route('catalogos.ventas.index')
+            return redirect()->route('catalogos.ventas')
                             ->with('success', 'Venta registrada exitosamente');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Error al registrar la venta: ' . $e->getMessage()]);
+            return back()->withInput()
+                         ->withErrors(['error' => 'Error al registrar la venta: ' . $e->getMessage()]);
         }
     }
 
