@@ -237,21 +237,21 @@ class CatalogosController extends Controller
 
     public function storeVenta(Request $request)
     {
+        \Log::info('Datos recibidos en storeVenta:', $request->all());
+
         $validated = $request->validate([
             'cliente_opcion' => 'required|in:nuevo,existente',
-            'cliente_id' => 'required_if:cliente_opcion,existente|exists:clientes,id_cliente',
             'nombre' => 'required_if:cliente_opcion,nuevo|string|max:100',
             'direccion' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'fecha' => 'required|date',
             'total' => 'required|numeric|min:0',
             'servicios' => 'nullable|array',
-            'servicios.*.id' => 'required_with:servicios|exists:servicios,id_servicio',
+            'servicios.*.id' => 'required_with:servicios|exists:servicio,id_servicio',
             'servicios.*.cantidad' => 'required_with:servicios|integer|min:1',
             'productos' => 'nullable|array',
             'productos.*.id' => 'required_with:productos|exists:accesorios,id_accesorios',
             'productos.*.cantidad' => 'required_with:productos|integer|min:1',
-            'metodo_pago' => 'required|string|max:50'
         ]);
 
         DB::beginTransaction();
@@ -261,7 +261,7 @@ class CatalogosController extends Controller
                 $cliente = Cliente::create([
                     'nombre' => $validated['nombre'],
                     'direccion' => $validated['direccion'] ?? null,
-                    'telefono' => $validated['telefono'] ?? null
+                    'telefono' => $validated['telefono'] ?? null,
                 ]);
                 $clienteId = $cliente->id_cliente;
             } else {
@@ -273,7 +273,6 @@ class CatalogosController extends Controller
                 'fk_id_cliente' => $clienteId,
                 'fecha' => $validated['fecha'],
                 'total' => $validated['total'],
-                'metodo_pago' => $validated['metodo_pago'],
                 'activo' => true
             ]);
 
@@ -298,7 +297,7 @@ class CatalogosController extends Controller
                         'cantidad' => $producto['cantidad'],
                         'subtotal' => $productoModel->precio * $producto['cantidad']
                     ]);
-                    
+
                     // Actualizar existencia
                     $productoModel->decrement('existencia', $producto['cantidad']);
                 }
@@ -353,19 +352,18 @@ class CatalogosController extends Controller
             ]
         ]);
     }
+
     public function updateVenta(Request $request, $id)
     {
         // Validar los datos enviados desde el formulario
         $validated = $request->validate([
             'activo' => 'required|boolean', // Validar 'activo' como booleano
-            'metodo_pago' => 'nullable|string|max:50'
         ]);
 
         // Buscar la venta y actualizarla
         $venta = Venta::findOrFail($id);
         $venta->update([
             'estado' => $validated['activo'], // Mapear 'activo' a 'estado'
-            'metodo_pago' => $validated['metodo_pago']
         ]);
 
         // Redirigir con un mensaje de éxito

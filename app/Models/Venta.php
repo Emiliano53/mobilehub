@@ -17,7 +17,6 @@ class Venta extends Model
         'total',
         'descripcion',
         'activo',
-        'metodo_pago'
     ];
 
     protected $casts = [

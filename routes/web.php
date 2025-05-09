@@ -43,10 +43,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{accesorio}', [CatalogosController::class, 'destroyAccesorio'])->name('catalogos.accesorios.destroy');
     });
 
-    // ==================== RUTAS PARA VENTAS (CORREGIDAS) ====================
-    Route::prefix('catalogos/ventas')->group(function() {
-        // Listado y creación
+    // ==================== RUTAS PARA VENTAS ====================
+    Route::prefix('catalogos/ventas')->group(function () {
         Route::get('/', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
+        Route::get('/ventas', [CatalogosController::class, 'ventas'])->name('catalogos.ventas.index');
         Route::get('/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
         Route::get('/create-existing', [CatalogosController::class, 'ventasCreateExisting'])->name('catalogos.ventas.create-existing');
         Route::post('/store', [CatalogosController::class, 'storeVenta'])->name('catalogos.ventas.store');
