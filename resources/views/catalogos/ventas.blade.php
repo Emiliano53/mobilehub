@@ -10,7 +10,7 @@
 
         <div class="row mb-4">
             <div class="col-md-6">
-                <form action="{{ route('catalogos.ventas.index') }}" method="GET">
+                <form action="{{ route('catalogos.ventas') }}" method="GET">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Buscar cliente..." value="{{ request('search') }}">
                         <button class="btn btn-outline-secondary" type="submit">Buscar</button>

@@ -45,25 +45,14 @@
             </div>
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="fecha">Fecha *</label>
                             <input type="date" name="fecha" id="fecha" class="form-control" 
                                    value="{{ now()->format('Y-m-d') }}" required>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="metodo_pago">Método de Pago *</label>
-                            <select name="metodo_pago" id="metodo_pago" class="form-control" required>
-                                <option value="">Seleccione...</option>
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Tarjeta">Tarjeta</option>
-                                <option value="Transferencia">Transferencia</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="total">Total</label>
                             <input type="text" name="total" id="total" class="form-control" 

@@ -32,8 +32,63 @@
             </div>
         </div>
 
-        <!-- El resto del formulario es igual al de nueva venta -->
-        @include('catalogos.partials.venta_detalles_form')
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Detalles de la Venta</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="fecha">Fecha *</label>
+                            <input type="date" name="fecha" id="fecha" class="form-control" 
+                                   value="{{ now()->format('Y-m-d') }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="total">Total</label>
+                            <input type="text" name="total" id="total" class="form-control" 
+                                   value="0.00" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                Servicios
+                                <button type="button" id="agregar-servicio" class="btn btn-sm btn-light float-right">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="servicios-container">
+                                    <!-- Los servicios se agregarán aquí dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                Productos
+                                <button type="button" id="agregar-producto" class="btn btn-sm btn-light float-right">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="productos-container">
+                                    <!-- Los productos se agregarán aquí dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="text-center">
             <button type="submit" class="btn btn-success btn-lg">
@@ -46,5 +101,188 @@
     </form>
 </div>
 
-<!-- Mismo JavaScript que en ventas_create.blade.php -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables para contadores
+    let servicioCounter = 0;
+    let productoCounter = 0;
+    
+    // Función para calcular el total
+    function calcularTotal() {
+        let total = 0;
+        
+        // Sumar servicios
+        document.querySelectorAll('.servicio-item').forEach(item => {
+            const precio = parseFloat(item.querySelector('[name^="servicios["][name$="[precio]"]').value) || 0;
+            const cantidad = parseInt(item.querySelector('[name^="servicios["][name$="[cantidad]"]').value) || 0;
+            const subtotal = precio * cantidad;
+            item.querySelector('.subtotal').textContent = subtotal.toFixed(2);
+            total += subtotal;
+        });
+        
+        // Sumar productos
+        document.querySelectorAll('.producto-item').forEach(item => {
+            const precio = parseFloat(item.querySelector('[name^="productos["][name$="[precio]"]').value) || 0;
+            const cantidad = parseInt(item.querySelector('[name^="productos["][name$="[cantidad]"]').value) || 0;
+            const subtotal = precio * cantidad;
+            item.querySelector('.subtotal').textContent = subtotal.toFixed(2);
+            total += subtotal;
+        });
+        
+        // Actualizar total general
+        document.getElementById('total').value = total.toFixed(2);
+    }
+    
+    // Agregar servicio
+    document.getElementById('agregar-servicio').addEventListener('click', function() {
+        servicioCounter++;
+        const container = document.getElementById('servicios-container');
+        const div = document.createElement('div');
+        div.className = 'servicio-item mb-3 p-3 border rounded';
+        div.innerHTML = `
+            <div class="row">
+                <div class="col-md-5">
+                    <label>Servicio *</label>
+                    <select name="servicios[${servicioCounter}][id]" class="form-control servicio-select" required>
+                        <option value="">Seleccione un servicio</option>
+                        @foreach($servicios as $servicio)
+                        <option value="{{ $servicio->id_servicio }}" data-precio="{{ $servicio->costo }}">
+                            {{ $servicio->descripcion_servicio }} - ${{ number_format($servicio->costo, 2) }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="servicios[${servicioCounter}][precio]" value="0">
+                </div>
+                <div class="col-md-3">
+                    <label>Cantidad *</label>
+                    <input type="number" name="servicios[${servicioCounter}][cantidad]" 
+                           class="form-control cantidad-servicio" value="1" min="1" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Subtotal</label>
+                    <div class="subtotal">0.00</div>
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+        
+        // Evento para actualizar precios
+        div.querySelector('.servicio-select').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const precio = selectedOption.dataset.precio || 0;
+            div.querySelector('[name^="servicios["][name$="[precio]"]').value = precio;
+            calcularTotal();
+        });
+        
+        div.querySelector('.cantidad-servicio').addEventListener('input', calcularTotal);
+        
+        div.querySelector('.remove-item').addEventListener('click', function() {
+            div.remove();
+            calcularTotal();
+        });
+    });
+    
+    // Agregar producto
+    document.getElementById('agregar-producto').addEventListener('click', function() {
+        productoCounter++;
+        const container = document.getElementById('productos-container');
+        const div = document.createElement('div');
+        div.className = 'producto-item mb-3 p-3 border rounded';
+        div.innerHTML = `
+            <div class="row">
+                <div class="col-md-5">
+                    <label>Producto *</label>
+                    <select name="productos[${productoCounter}][id]" class="form-control producto-select" required>
+                        <option value="">Seleccione un producto</option>
+                        @foreach($productos as $producto)
+                        <option value="{{ $producto->id_accesorios }}" 
+                                data-precio="{{ $producto->precio }}" 
+                                data-existencia="{{ $producto->existencia }}">
+                            {{ $producto->nombre }} - ${{ number_format($producto->precio, 2) }} (Existencia: {{ $producto->existencia }})
+                        </option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="productos[${productoCounter}][precio]" value="0">
+                </div>
+                <div class="col-md-3">
+                    <label>Cantidad *</label>
+                    <input type="number" name="productos[${productoCounter}][cantidad]" 
+                           class="form-control cantidad-producto" value="1" min="1" required>
+                    <small class="text-danger existencia-msg d-none">No hay suficiente existencia</small>
+                </div>
+                <div class="col-md-3">
+                    <label>Subtotal</label>
+                    <div class="subtotal">0.00</div>
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+        
+        // Eventos para productos
+        div.querySelector('.producto-select').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const precio = selectedOption.dataset.precio || 0;
+            const existencia = selectedOption.dataset.existencia || 0;
+            
+            div.querySelector('[name^="productos["][name$="[precio]"]').value = precio;
+            
+            const cantidadInput = div.querySelector('.cantidad-producto');
+            cantidadInput.max = existencia;
+            if (parseInt(cantidadInput.value) > existencia) {
+                cantidadInput.value = existencia;
+                div.querySelector('.existencia-msg').classList.remove('d-none');
+            } else {
+                div.querySelector('.existencia-msg').classList.add('d-none');
+            }
+            
+            calcularTotal();
+        });
+        
+        div.querySelector('.cantidad-producto').addEventListener('input', function() {
+            const selectedOption = div.querySelector('.producto-select').options[div.querySelector('.producto-select').selectedIndex];
+            const existencia = selectedOption ? selectedOption.dataset.existencia || 0 : 0;
+            
+            if (parseInt(this.value) > existencia) {
+                this.value = existencia;
+                div.querySelector('.existencia-msg').classList.remove('d-none');
+            } else {
+                div.querySelector('.existencia-msg').classList.add('d-none');
+            }
+            
+            calcularTotal();
+        });
+        
+        div.querySelector('.remove-item').addEventListener('click', function() {
+            div.remove();
+            calcularTotal();
+        });
+    });
+    
+    // Validación del formulario
+    document.getElementById('venta-form').addEventListener('submit', function(e) {
+        const servicios = document.querySelectorAll('.servicio-item').length;
+        const productos = document.querySelectorAll('.producto-item').length;
+        
+        if (servicios === 0 && productos === 0) {
+            e.preventDefault();
+            alert('Debe agregar al menos un servicio o producto');
+            return false;
+        }
+        
+        calcularTotal();
+        return true;
+    });
+});
+</script>
+
 @endsection
