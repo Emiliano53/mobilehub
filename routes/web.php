@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('reportes')->group(function () {
-        Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes'); // Ruta para "Ver Reportes"
+        Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes.index'); // Ruta para "Ver Reportes"
         Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas'); // Ruta para reportes de ventas
     });
 });

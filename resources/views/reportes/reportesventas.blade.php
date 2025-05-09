@@ -1,16 +1,18 @@
-<!-- filepath: /opt/lampp/htdocs/mobilehub/resources/views/reportes/reportes.blade.php -->
 @extends('layouts.app')
 @section('title', 'Reporte de Ventas')
 
 @section('content')
+    @component('components.breadcrumbs', ['breadcrumbs' => [
+        'Inicio' => route('home'),
+        'Reportes' => route('reportes.index'), // Asegúrate de tener una ruta llamada 'reportes.index'
+    ]])
+    @endcomponent
 <div class="container py-5">
-    <!-- Título -->
     <div class="text-center mb-4">
         <h1 class="display-5 fw-bold">Reporte de Ventas</h1>
         <p class="text-muted">Consulta las ventas realizadas, incluyendo accesorios y servicios.</p>
     </div>
 
-    <!-- Buscador por rango de fechas -->
     <form action="{{ route('reportes.ventas') }}" method="GET" class="mb-4">
         <div class="row g-3 align-items-center">
             <div class="col-md-4">
@@ -27,7 +29,6 @@
         </div>
     </form>
 
-    <!-- Tabla de Ventas -->
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="table-responsive">
@@ -78,7 +79,6 @@
         </div>
     </div>
 
-    <!-- Paginación -->
     <div class="d-flex justify-content-center mt-4">
         {{ $ventas->links('pagination::bootstrap-5') }}
     </div>
