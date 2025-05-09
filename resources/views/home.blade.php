@@ -69,7 +69,7 @@
             </div>
             <div class="card-body p-4">
                 <p class="card-text text-muted mb-4">Genera reportes detallados</p>
-                <a href="{{ route('reportes.index') }}" class="btn btn-modern btn-modern-primary" style="background: var(--info);">
+                <a href="{{ route('reportes') }}" class="btn btn-modern btn-modern-primary" style="background: var(--info);">
                     <i class="fas fa-chart-line me-2"></i> Ver Reportes
                 </a>
             </div>

@@ -4,7 +4,7 @@
 @section('content')
     @component('components.breadcrumbs', ['breadcrumbs' => [
         'Inicio' => route('home'),
-        'Reportes' => route('reportes.index'), // Asegúrate de tener una ruta llamada 'reportes.index'
+        'Reportes' => route('reportes'), // Asegúrate de tener una ruta llamada 'reportes.index'
     ]])
     @endcomponent
 <div class="container py-5">
