@@ -139,10 +139,25 @@ class CatalogosController extends Controller
             'existencia' => 'required|integer|min:0',
         ]);
 
+        // Buscar accesorio existente
+        $accesorio = Accesorio::where('nombre', $validated['nombre'])
+                              ->where('tipo', $validated['tipo'])
+                              ->where('marca', $validated['marca'])
+                              ->first();
+
+        if ($accesorio) {
+            // Actualizar existencia
+            $accesorio->increment('existencia', $validated['existencia']);
+            $accesorio->update(['precio' => $validated['precio']]); // Opcional: Actualizar precio
+            return redirect()->route('catalogos.accesorios')
+                             ->with('success', 'Accesorio actualizado exitosamente');
+        }
+
+        // Crear nuevo accesorio si no existe
         Accesorio::create($validated);
 
         return redirect()->route('catalogos.accesorios')
-                        ->with('success', 'Accesorio creado exitosamente');
+                         ->with('success', 'Accesorio creado exitosamente');
     }
 
     public function editAccesorio(Accesorio $accesorio): View
@@ -182,6 +197,16 @@ class CatalogosController extends Controller
         $accesorio->delete();
         return redirect()->route('catalogos.accesorios')
                         ->with('success', 'Accesorio eliminado exitosamente');
+    }
+
+    public function buscarAccesorio(Request $request)
+    {
+        $query = $request->query('query');
+        $accesorios = Accesorio::where('nombre', 'like', "%$query%")
+                               ->orWhere('tipo', 'like', "%$query%")
+                               ->get();
+
+        return response()->json($accesorios);
     }
 
     // ==================== MÉTODOS PARA VENTAS ====================

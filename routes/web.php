@@ -72,3 +72,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas');
     });
 });
+
+// ==================== RUTAS PARA API ====================
+Route::get('/api/accesorios/buscar', [CatalogosController::class, 'buscarAccesorio']);

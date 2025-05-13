@@ -26,6 +26,7 @@
                     <label for="precio">Precio</label>
                     <input type="number" name="precio" id="precio" class="form-control">
                 </div>
+                <p></p>
 
                 <div class="form-group">
                     <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancelar</a>

@@ -41,7 +41,10 @@
                             <td class="align-middle">{{ $accesorio->tipo }}</td>
                             <td class="align-middle">{{ $accesorio->marca }}</td>
                             <td class="align-middle text-end">${{ number_format($accesorio->precio, 2) }}</td>
-                            <td class="align-middle text-center">{{ $accesorio->existencia }}</td>
+                            <td class="align-middle text-center">
+                                {{ $accesorio->existencia }}
+                                <small class="text-muted">(Resurtido)</small>
+                            </td>
                             <td class="align-middle text-center">
                                 {{ $accesorio->estado == 1 ? 'Activo' : 'Inactivo' }}
                             </td>
