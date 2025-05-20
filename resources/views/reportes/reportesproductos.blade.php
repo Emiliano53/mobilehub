@@ -23,7 +23,6 @@
                         <tr>
                             <th>ID Producto</th>
                             <th>Nombre</th>
-                            <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
                             <th>Estado</th>
@@ -35,7 +34,6 @@
                         <tr>
                             <td>{{ $producto->id_accesorios }}</td>
                             <td>{{ $producto->nombre }}</td>
-                            <td>{{ $producto->descripcion }}</td>
                             <td>${{ number_format($producto->precio, 2) }}</td>
                             <td>{{ $producto->existencia }}</td>
                             <td class="text-center">{{ $producto->estado == 1 ? 'Activo' : 'Inactivo' }}</td>
