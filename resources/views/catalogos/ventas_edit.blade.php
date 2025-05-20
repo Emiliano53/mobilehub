@@ -9,9 +9,6 @@
             <div class="card-header bg-white border-bottom">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Editar Venta #{{ $venta->id }}</h4>
-                    <span class="badge bg-{{ $venta->activo ? 'success' : 'secondary' }}">
-                        {{ $venta->activo ? 'Activo' : 'Inactivo' }}
-                    </span>
                 </div>
             </div>
             
@@ -50,6 +47,15 @@
                 <form action="{{ route('catalogos.ventas.update', $venta->id) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    
+                    <div class="mb-4">
+                        <label for="activo" class="form-label fw-semibold">Estado de la Venta</label>
+                        <select name="activo" id="activo" class="form-select" required>
+                            <option value="1" {{ $venta->activo ? 'selected' : '' }}>Inactivo</option>
+                            <option value="0" {{ !$venta->activo ? 'selected' : '' }}>Activo</option>
+                        </select>
+                        <small class="text-muted">Las ventas inactivas no aparecerán en algunos reportes</small>
+                    </div>
 
                     <div class="d-flex justify-content-between pt-3 border-top">
                         <a href="{{ route('catalogos.ventas.index') }}" class="btn btn-outline-secondary">
