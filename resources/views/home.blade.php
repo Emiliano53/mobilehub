@@ -69,9 +69,17 @@
             </div>
             <div class="card-body p-4">
                 <p class="card-text text-muted mb-4">Genera reportes detallados</p>
-                <a href="{{ route('reportes') }}" class="btn btn-modern btn-modern-primary" style="background: var(--info);">
-                    <i class="fas fa-chart-line me-2"></i> Ver Reportes
-                </a>
+                <div class="d-grid gap-2">
+                    <a href="{{ route('reportes.ventas') }}" class="btn btn-modern btn-modern-primary" style="background: var(--info);">
+                        <i class="fas fa-chart-line me-2"></i> Reporte de Ventas
+                    </a>
+                    <a href="{{ route('reportes.servicios') }}" class="btn btn-modern btn-modern-primary" style="background: var(--info);">
+                        <i class="fas fa-tools me-2"></i> Reporte de Servicios
+                    </a>
+                    <a href="{{ route('reportes.productos') }}" class="btn btn-modern btn-modern-primary" style="background: var(--info);">
+                        <i class="fas fa-box-open me-2"></i> Reporte de Productos
+                    </a>
+                </div>
             </div>
         </div>
     </div>

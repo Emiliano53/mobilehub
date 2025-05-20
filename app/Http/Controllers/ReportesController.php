@@ -52,9 +52,9 @@ class ReportesController extends Controller
 
     public function reporteServiciosGet(): View
     {
-        $servicios = Servicio::orderBy('id_servicio', 'DESC')->get(); // Cambia 'id' por 'id_servicio'
+        $servicios = Servicio::orderBy('id_servicio', 'DESC')->get();
 
-        return view('reportes.servicios', [
+        return view('reportes.reportesservicios', [
             'servicios' => $servicios,
             'breadcrumbs' => [
                 'Inicio' => url('/'),
@@ -73,6 +73,20 @@ class ReportesController extends Controller
                 'Inicio' => url('/'),
                 'Reportes' => url('/reportes'),
                 'Reporte de Inventario' => url('/reportes/inventario'),
+            ],
+        ]);
+    }
+
+    public function reporteProductosGet(): View
+    {
+        $productos = Accesorio::orderBy('id_accesorios', 'DESC')->get();
+
+        return view('reportes.reportesproductos', [
+            'productos' => $productos,
+            'breadcrumbs' => [
+                'Inicio' => url('/'),
+                'Reportes' => url('/reportes'),
+                'Reporte de Productos' => url('/reportes/productos'),
             ],
         ]);
     }

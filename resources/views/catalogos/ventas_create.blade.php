@@ -110,15 +110,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Variables para contadores
     let servicioCounter = 0;
     let productoCounter = 0;
-    
-    // Función para calcular el total
+
     function calcularTotal() {
         let total = 0;
-        
-        // Sumar servicios
+
         document.querySelectorAll('.servicio-item').forEach(item => {
             const precio = parseFloat(item.querySelector('[name^="servicios["][name$="[precio]"]').value) || 0;
             const cantidad = parseInt(item.querySelector('[name^="servicios["][name$="[cantidad]"]').value) || 0;
@@ -126,8 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             item.querySelector('.subtotal').textContent = subtotal.toFixed(2);
             total += subtotal;
         });
-        
-        // Sumar productos
+
         document.querySelectorAll('.producto-item').forEach(item => {
             const precio = parseFloat(item.querySelector('[name^="productos["][name$="[precio]"]').value) || 0;
             const cantidad = parseInt(item.querySelector('[name^="productos["][name$="[cantidad]"]').value) || 0;
@@ -135,12 +131,10 @@ document.addEventListener('DOMContentLoaded', function() {
             item.querySelector('.subtotal').textContent = subtotal.toFixed(2);
             total += subtotal;
         });
-        
-        // Actualizar total general
+
         document.getElementById('total').value = total.toFixed(2);
     }
-    
-    // Agregar servicio
+
     document.getElementById('agregar-servicio').addEventListener('click', function() {
         servicioCounter++;
         const container = document.getElementById('servicios-container');
@@ -177,26 +171,22 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         container.appendChild(div);
-        
-        // Evento para actualizar precios cuando se selecciona un servicio
+
         div.querySelector('.servicio-select').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             const precio = selectedOption.dataset.precio || 0;
             div.querySelector('[name^="servicios["][name$="[precio]"]').value = precio;
             calcularTotal();
         });
-        
-        // Evento para actualizar al cambiar cantidad
+
         div.querySelector('.cantidad-servicio').addEventListener('input', calcularTotal);
-        
-        // Evento para eliminar item
+
         div.querySelector('.remove-item').addEventListener('click', function() {
             div.remove();
             calcularTotal();
         });
     });
-    
-    // Agregar producto
+
     document.getElementById('agregar-producto').addEventListener('click', function() {
         productoCounter++;
         const container = document.getElementById('productos-container');
@@ -236,16 +226,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         container.appendChild(div);
-        
-        // Evento para actualizar precios cuando se selecciona un producto
+
         div.querySelector('.producto-select').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             const precio = selectedOption.dataset.precio || 0;
             const existencia = selectedOption.dataset.existencia || 0;
-            
+
             div.querySelector('[name^="productos["][name$="[precio]"]').value = precio;
-            
-            // Validar existencia
+
             const cantidadInput = div.querySelector('.cantidad-producto');
             cantidadInput.max = existencia;
             if (parseInt(cantidadInput.value) > existencia) {
@@ -254,45 +242,40 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 div.querySelector('.existencia-msg').classList.add('d-none');
             }
-            
+
             calcularTotal();
         });
-        
-        // Evento para actualizar al cambiar cantidad
+
         div.querySelector('.cantidad-producto').addEventListener('input', function() {
             const selectedOption = div.querySelector('.producto-select').options[div.querySelector('.producto-select').selectedIndex];
             const existencia = selectedOption ? selectedOption.dataset.existencia || 0 : 0;
-            
+
             if (parseInt(this.value) > existencia) {
                 this.value = existencia;
                 div.querySelector('.existencia-msg').classList.remove('d-none');
             } else {
                 div.querySelector('.existencia-msg').classList.add('d-none');
             }
-            
+
             calcularTotal();
         });
-        
-        // Evento para eliminar item
+
         div.querySelector('.remove-item').addEventListener('click', function() {
             div.remove();
             calcularTotal();
         });
     });
-    
-    // Validación del formulario antes de enviar
+
     document.getElementById('venta-form').addEventListener('submit', function(e) {
-        // Validar que al menos haya un servicio o producto
         const servicios = document.querySelectorAll('.servicio-item').length;
         const productos = document.querySelectorAll('.producto-item').length;
-        
+
         if (servicios === 0 && productos === 0) {
             e.preventDefault();
             alert('Debe agregar al menos un servicio o producto');
             return false;
         }
-        
-        // Actualizar el campo total por si acaso
+
         calcularTotal();
         return true;
     });

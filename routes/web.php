@@ -45,31 +45,33 @@ Route::middleware('auth')->group(function () {
 
     // ==================== RUTAS PARA VENTAS ====================
     Route::prefix('catalogos/ventas')->group(function () {
-        Route::get('/', [CatalogosController::class, 'ventas'])->name('catalogos.ventas');
-        Route::get('/ventas', [CatalogosController::class, 'ventas'])->name('catalogos.ventas.index');
-        Route::get('/create', [CatalogosController::class, 'ventascreate'])->name('catalogos.ventas.create');
-        Route::get('/create-existing', [CatalogosController::class, 'ventasCreateExisting'])->name('catalogos.ventas.create-existing');
-        Route::post('/store', [CatalogosController::class, 'storeVenta'])->name('catalogos.ventas.store');
+        Route::get('/', [VentaController::class, 'ventas'])->name('catalogos.ventas');
+        Route::get('/ventas', [VentaController::class, 'ventas'])->name('catalogos.ventas.index');
+        Route::get('/create', [VentaController::class, 'ventascreate'])->name('catalogos.ventas.create');
+        Route::get('/create-existing', [VentaController::class, 'ventasCreateExisting'])->name('catalogos.ventas.create-existing');
+        Route::post('/store', [VentaController::class, 'storeVenta'])->name('catalogos.ventas.store');
         
         // Detalles y edición
-        Route::get('/{venta}/detalles', [CatalogosController::class, 'detallesVenta'])->name('catalogos.ventas.detalles');
-        Route::get('/{venta}/edit', [CatalogosController::class, 'editVenta'])->name('catalogos.ventas.edit');
-        Route::put('/{venta}', [CatalogosController::class, 'updateVenta'])->name('catalogos.ventas.update');
+        Route::get('/{venta}/detalles', [VentaController::class, 'detallesVenta'])->name('catalogos.ventas.detalles');
+        Route::get('/{venta}/edit', [VentaController::class, 'editVenta'])->name('catalogos.ventas.edit');
+        Route::put('/{venta}', [VentaController::class, 'updateVenta'])->name('catalogos.ventas.update');
         
         // Eliminación y cambio de estado
-        Route::delete('/{venta}', [CatalogosController::class, 'destroyVenta'])->name('catalogos.ventas.destroy');
-        Route::post('/{venta}/cambiar-estado', [CatalogosController::class, 'cambiarEstado'])->name('catalogos.ventas.cambiar-estado');
-        Route::put('/{venta}/activate', [CatalogosController::class, 'activateVenta'])->name('catalogos.ventas.activate');
-        Route::put('/{venta}/deactivate', [CatalogosController::class, 'deactivateVenta'])->name('catalogos.ventas.deactivate');
+        Route::delete('/{venta}', [VentaController::class, 'destroyVenta'])->name('catalogos.ventas.destroy');
+        Route::post('/{venta}/cambiar-estado', [VentaController::class, 'cambiarEstado'])->name('catalogos.ventas.cambiar-estado');
+        Route::put('/{venta}/activate', [VentaController::class, 'activateVenta'])->name('catalogos.ventas.activate');
+        Route::put('/{venta}/deactivate', [VentaController::class, 'deactivateVenta'])->name('catalogos.ventas.deactivate');
         
         // Reportes (opcional, podrían estar en otro grupo)
-        Route::get('/reporte', [CatalogosController::class, 'reporteVentas'])->name('catalogos.ventas.reporte');
+        Route::get('/reporte', [VentaController::class, 'reporteVentas'])->name('catalogos.ventas.reporte');
     });
 
     // ==================== RUTAS PARA REPORTES ====================
     Route::prefix('reportes')->group(function () {
         Route::get('/', [ReportesController::class, 'reportesGet'])->name('reportes');
         Route::get('/ventas', [ReportesController::class, 'reporteVentasGet'])->name('reportes.ventas');
+        Route::get('/servicios', [ReportesController::class, 'reporteServiciosGet'])->name('reportes.servicios');
+        Route::get('/productos', [ReportesController::class, 'reporteProductosGet'])->name('reportes.productos');
     });
 });
 

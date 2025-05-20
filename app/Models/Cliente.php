@@ -21,4 +21,9 @@ class Cliente extends Model
     {
         return $this->hasMany(Venta::class, 'fk_id_cliente', 'id_cliente'); // Relación con la tabla venta
     }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'fk_id_cliente', 'id_cliente');
+    }
 }
