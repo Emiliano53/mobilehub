@@ -6,6 +6,16 @@
 @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
 @endcomponent
 
+@if($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="container">
     <h1 class="text-center mb-4">Registrar Nueva Venta</h1>
 

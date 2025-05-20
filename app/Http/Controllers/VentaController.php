@@ -73,6 +73,7 @@ class VentaController extends Controller
         $validated = $request->validate([
             'cliente_opcion' => 'required|in:nuevo,existente',
             'nombre' => 'required_if:cliente_opcion,nuevo|string|max:100',
+            'cliente_id' => 'required_if:cliente_opcion,existente|exists:cliente,id_cliente',
             'direccion' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'fecha' => 'required|date',
@@ -106,7 +107,6 @@ class VentaController extends Controller
                 'fk_id_cliente' => $clienteId,
                 'fecha' => $validated['fecha'],
                 'total' => $validated['total'],
-                'activo' => true
             ]);
             \Log::info('Venta creada:', $venta->toArray());
 
