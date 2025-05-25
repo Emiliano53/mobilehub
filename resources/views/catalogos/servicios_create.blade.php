@@ -19,7 +19,10 @@
 
                 <div class="form-group">
                     <label for="estado">Estado</label>
-                    <input type="text" name="estado" id="estado" class="form-control">
+                    <select name="estado" id="estado" class="form-control" required>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
