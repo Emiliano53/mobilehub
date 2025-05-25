@@ -183,6 +183,7 @@
     </style>
 </head>
 <body>
+    @auth
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top">
         <div class="container">
@@ -231,6 +232,7 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
+    @endauth
 
     <!-- Contenido Principal -->
     <div class="container main-container">
