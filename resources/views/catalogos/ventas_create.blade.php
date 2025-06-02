@@ -38,7 +38,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="telefono">Teléfono</label>
-                            <input type="text" name="telefono" id="telefono" class="form-control">
+                            <input type="text" name="telefono" id="telefono" class="form-control" pattern="\d{10}" title="El número de teléfono debe tener 10 dígitos.">
                         </div>
                     </div>
                 </div>
